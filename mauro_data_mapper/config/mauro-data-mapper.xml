@@ -1,0 +1,17 @@
+<Context>
+  <Parameter name="simplejavamail.smtp.username" value="${EMAIL_USERNAME}" />
+  <Parameter name="simplejavamail.smtp.password" value="${EMAIL_PASSWORD}" />
+  <Parameter name="simplejavamail.smtp.host" value="${EMAIL_HOST}" />
+  <Parameter name="simplejavamail.smtp.port" value="${EMAIL_PORT}" />
+  <Parameter name="simplejavamail.transportstrategy" value="${EMAIL_TRANSPORTSTRATEGY}" />
+  <Parameter name="emailServiceUrl" value="${EMAILSERVICE_URL}" />
+  <Parameter name="emailServiceUsername" value="${EMAILSERVICE_USERNAME}" />
+  <Parameter name="emailServicePassword" value="${EMAILSERVICE_PASSWORD}" />
+  <Parameter name="grails.cors.allowedOrigins" value="${GRAILS_CORS_ALLOWEDORIGINS}" />
+  <Parameter name="dataSource.username" value="${DATABASE_USERNAME}" />
+  <Parameter name="dataSource.password" value="${DATABASE_PASSWORD}" />
+  <Parameter name="dataSource.name" value="${DATABASE_NAME}" />
+  <Parameter name="dataSource.host" value="${DATABASE_HOST}" />
+  <Parameter name="dataSource.port" value="${DATABASE_PORT}" />
+  <Parameter name="hibernate.search.default.indexBase" value="${SEARCH_INDEX_BASE}" />
+</Context>

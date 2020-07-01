@@ -1,0 +1,32 @@
+version: '3'
+services:
+    postgres:
+        build: ./postgres
+        environment:
+            POSTGRES_PASSWORD: postgresisawesome
+        volumes:
+            - postgres12:/var/lib/postgresql/data
+        restart: on-failure:3
+    mauro-data-mapper:
+        build:
+            context: ./mauro_data_mapper
+        environment:
+            PGPASSWORD: postgresisawesome
+            MDM_FQ_HOSTNAME: localhost
+            MDM_PORT: 8082
+        ports:
+            - "8082:8080"
+        depends_on:
+            - postgres
+        volumes:
+            - lucene_index:/lucene
+            - ./shared_volumes/logs/metadata-catalogue:/usr/local/tomcat/logs
+            - ./shared_volumes/apiProperties:/tmp
+        restart: on-failure:3
+# Persistence capability to systems,
+# Any volumes labelled below will ensure persistence when containers removed unless the volume is removed as well
+volumes:
+    postgres12:
+        driver: local
+    lucene_index:
+        driver: local
