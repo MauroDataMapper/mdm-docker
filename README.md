@@ -28,6 +28,8 @@ The following components are part of this system:
     - [`COPY` over `ADD`](#copy-over-add)
     - [`docker-compose`](#docker-compose)
 
+--- 
+
 ## Dependencies
 
 If using `Windows` or `OSX` you will need to install Docker.
