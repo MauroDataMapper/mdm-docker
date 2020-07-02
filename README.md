@@ -11,6 +11,9 @@ The following components are part of this system:
 - [Mauro Data Mapper Docker](#mauro-data-mapper-docker)
   - [Table Of Contents](#table-of-contents)
   - [Dependencies](#dependencies)
+  - [Building](#building)
+  - [Run Environment](#run-environment)
+  - [Migrating from Metadata Catalogue](#migrating-from-metadata-catalogue)
   - [Docker](#docker)
     - [The Docker Machine](#the-docker-machine)
     - [Configuring shell to use the default Docker Machine](#configuring-shell-to-use-the-default-docker-machine)
@@ -35,17 +38,30 @@ Currently the minimum level of docker is
 
 ---
 
+## Building
+
 **Please note this whole build system is still a work in progress and may not start up as expected,
 also some properties may not be set as expected**
 
 Currently you will need to 
 
 1. Build mdm-server using `grails war`
-1. 
+1. Extract the war file to a folder
+1. Copy the contents of the extracted folder to `mauro-data-mapper/lib/build`, nominally
+    1. META-INF
+    1. org
+    1. WEB-INF
+1. Build the mdm-ui using `ng build --prod`
+1. Copy the contents of the `dist` folder to `mauro-data-mapper/lib/build`
+1. Run `docker-compose build`
 
-### Environment
+The above will build the Mauro Data Mapper into the `ROOT` directory of the Tomcat webapps folder.
 
-#### Environment Notes
+---
+
+## Run Environment
+
+### Environment Notes
 
 **Database** The system is designed to use the postgres service provided in the docker-compose file, therefore there should be no need to alter any of
 these settings. Only make alterations if running postgres as a separate service outside of docker-compose.
@@ -55,6 +71,14 @@ these settings. Only make alterations if running postgres as a separate service 
  
  **Email** The standard email properties will allow emails to be sent to a specific SMTP server. The `emailservice` properties override this and 
  send the email to the specified email service which will then forward it onto our email SMTP server.
+
+---
+
+## Migrating from Metadata Catalogue
+
+Please see the [mc-to-mdm-migration](https://github.com/MauroDataMapper/mc-to-mdm-migration) repository for details.
+
+You will need to have started up this docker service once to ensure the database and volume exists for the Mauro Data Mapper.
 
 ---
 
