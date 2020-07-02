@@ -9,7 +9,7 @@ services:
         restart: on-failure:3
     mauro-data-mapper:
         build:
-            context: ./mauro_data_mapper
+            context: mauro-data-mapper
         environment:
             PGPASSWORD: postgresisawesome
             MDM_FQ_HOSTNAME: localhost
@@ -20,8 +20,8 @@ services:
             - postgres
         volumes:
             - lucene_index:/lucene
-            - ./shared_volumes/logs/metadata-catalogue:/usr/local/tomcat/logs
-            - ./shared_volumes/apiProperties:/tmp
+            - ./shared_volumes/logs/maurodatamapper:/usr/local/tomcat/logs
+            - ./shared_volumes/tmp:/tmp
         restart: on-failure:3
 # Persistence capability to systems,
 # Any volumes labelled below will ensure persistence when containers removed unless the volume is removed as well

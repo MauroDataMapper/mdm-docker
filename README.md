@@ -8,7 +8,7 @@ The following components are part of this system:
 
 ## Table Of Contents
 
-- [Mauro Data Mapper Docker](#metadata-catalogue-docker)
+- [Mauro Data Mapper Docker](#mauro-data-mapper-docker)
   - [Table Of Contents](#table-of-contents)
   - [Dependencies](#dependencies)
   - [Docker](#docker)
@@ -38,8 +38,12 @@ Currently the minimum level of docker is
 **Please note this whole build system is still a work in progress and may not start up as expected,
 also some properties may not be set as expected**
 
-### Environment
+Currently you will need to 
 
+1. Build mdm-server using `grails war`
+1. 
+
+### Environment
 
 #### Environment Notes
 
