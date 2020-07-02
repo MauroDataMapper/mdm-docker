@@ -30,7 +30,7 @@ The following components are part of this system:
 
 --- 
 
-## Dependencies
+## Dependencies
 
 If using `Windows` or `OSX` you will need to install Docker.
 Currently the minimum level of docker is
