@@ -1,0 +1,11 @@
+# ~/.ssh/config
+
+Host github-mdm-application
+HostName github.com
+User git
+IdentityFile ~/.ssh/id_rsa_application
+
+Host github-mdm-ui
+HostName github.com
+User git
+IdentityFile ~/.ssh/id_rsa_ui
