@@ -15,6 +15,7 @@ services:
                 MDM_APPLICATION_COMMIT: develop
                 MDM_UI_COMMIT: develop
                 TOMCAT_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
+                ADDITIONAL_PLUGINS: ""
         environment:
             PGPASSWORD: postgresisawesome
             MDM_FQ_HOSTNAME: localhost

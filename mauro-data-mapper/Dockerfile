@@ -7,14 +7,16 @@ LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
 ARG MDM_APPLICATION_COMMIT=develop
 ARG MDM_UI_COMMIT=develop
+ARG ADDITIONAL_PLUGINS=""
 
 # Checkout the desired versions
 RUN cd "$MDM_APPLICATION_HOME" && git checkout "$MDM_APPLICATION_COMMIT" && git pull
 RUN cd "$MDM_UI_HOME" && git checkout "$MDM_UI_COMMIT" && git pull
 
 # Build the front and back ends
-RUN build_backend.sh
 RUN build_frontend.sh
+RUN copy_in_dependencies.sh $ADDITIONAL_PLUGINS
+RUN build_backend.sh
 
 # Build the full MDM application
 WORKDIR $MDM_BUILD_HOME

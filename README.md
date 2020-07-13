@@ -83,6 +83,29 @@ mauro-data-mapper:
                 TOMCAT_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
 ```
 
+### Additional Backend Plugins
+
+Additional plugins can be found at the [Mauro Data Mapper Plugins](https://github.com/MauroDataMapper-Plugins) organisation page.
+Each of these can be added as `runtimeOnly` dependencies by adding them to the `ADDITIONAL_PLUGINS` build argument for the `mauro-data-mapper`
+service build.
+
+These dependencies should be provided in a semi-colon separated list in the gradle style, they will be split and each will be added as a `runtimeOnly`
+dependency.
+
+Example
+```yml
+ mauro-data-mapper:
+        build:
+            context: mauro-data-mapper
+            args:
+                ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-database:2.0.0-SNAPSHOT"
+```
+
+Will add the following to the `dependencies.gradle` file.
+```gradle
+runtimeOnly uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-database:2.0.0-SNAPSHOT
+```
+
 ### Multiple instances
 
 If running multiple docker-compose instances then they will all make use of the same initial images, therefore you only need to run the `./make` script
