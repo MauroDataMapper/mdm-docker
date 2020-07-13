@@ -28,7 +28,7 @@ The following components are part of this system:
     - [`COPY` over `ADD`](#copy-over-add)
     - [`docker-compose`](#docker-compose)
 
---- 
+---
 
 ## Dependencies
 
@@ -45,19 +45,48 @@ Currently the minimum level of docker is
 **Please note this whole build system is still a work in progress and may not start up as expected,
 also some properties may not be set as expected**
 
-Currently you will need to 
+```bash
+# Build the entire system
+./make
+```
 
-1. Build mdm-server using `grails war`
-1. Extract the war file to a folder
-1. Copy the contents of the extracted folder to `mauro-data-mapper/lib/build`, nominally
-    1. META-INF
-    1. org
-    1. WEB-INF
-1. Build the mdm-ui using `ng build --prod`
-1. Copy the contents of the `dist` folder to `mauro-data-mapper/lib/build`
-1. Run `docker-compose build`
+The above command will build all the necessary base images and then perform a `docker-compose build` to complete the build.
 
-The above will build the Mauro Data Mapper into the `ROOT` directory of the Tomcat webapps folder.
+This script is required to
+* build an updated OS version of tomcat which is where the application will run - `mdm/tomcat:9.0.27-jdk12-adoptopenjdk-openj9`
+* build the base SDK image for building the application in - `mdm/sdk_base:grails-4.0.3-adoptopenjdk-12-jdk-openj9`
+* build an initial image with the code checked out and dependencies installed - `mdm/mdm_base:develop`
+
+*Once these 3 images are built the main docker-compose service will be able to build without the use of the `make` file.*
+
+At this point in time it will build the latest `develop` branches from [mdm-core](https://github.com/MauroDataMapper/mdm-core) and
+[mdm-ui](https://github.com/MauroDataMapper/mdm-ui).
+
+In the `./make` script the commit/branch to be built can be changed by using the parameters as shown below
+
+```bash
+Usage ./make [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
+
+-b, --back-end COMMIT_BRANCH    : The commit or branch to checkout and build for the back-end from mdm-core.
+-f, --front-end COMMIT_BRANCH   : The commit or branch to checkout and build for the front-end from mdm-ui
+```
+
+Once the `./make` script has been run once the commit/branch choice can be altered by changing the build args in the `docker-compose.yml` file.
+```yml
+mauro-data-mapper:
+        build:
+            context: mauro-data-mapper
+            args:
+                MDM_BASE_VERSION: develop
+                MDM_APPLICATION_COMMIT: develop
+                MDM_UI_COMMIT: develop
+                TOMCAT_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
+```
+
+### Multiple instances
+
+If running multiple docker-compose instances then they will all make use of the same initial images, therefore you only need to run the `./make` script
+once per server.
 
 ---
 
@@ -70,9 +99,9 @@ these settings. Only make alterations if running postgres as a separate service 
 
 **Web Api** The provided values will be used to define the CORS allowed origins. The port will be used to define http or https(443), if its not 80
  or 443 then it will be added to the url generated. The host must be the host used in the web url when accessing the catalogue in a web browser.
- 
- **Email** The standard email properties will allow emails to be sent to a specific SMTP server. The `emailservice` properties override this and 
- send the email to the specified email service which will then forward it onto our email SMTP server.
+
+**Email** The standard email properties will allow emails to be sent to a specific SMTP server. The `emailservice` properties override this and
+send the email to the specified email service which will then forward it onto our email SMTP server.
 
 ---
 
