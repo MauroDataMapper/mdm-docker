@@ -115,13 +115,35 @@ once per server.
 
 ## Run Environment
 
+*Please see `mauro-data-mapper/Dockerfile` for all defaults*
+
+* `CATALINA_OPTS` - Java Opts to be passed to Tomcat 
+* `DATABASE_HOST` - The host of the database. If using docker-compose this should be left as `postgres` or changed to the name of the database
+ service
+* `DATABASE_PORT` - The port of the database 
+* `DATABASE_NAME` - The name of the database which the catalogue data will be stored in 
+* `DATABASE_USERNAME` - Username to use to connect to the database
+* `DATABASE_PASSWORD` - Password to use to connect to the database
+* `MDM_FQ_HOSTNAME` - The FQDN of the server where the catalogue will be accessed 
+* `MDM_PORT` - The port used to access the catalogue
+* `EMAIL_USERNAME` - To allow the catalogue to send emails this needs to be a valid username for the `EMAIL_HOST`
+* `EMAIL_PASSWORD` - To allow the catalogue to send emails this needs to be a valid password for the `EMAIL_HOST` and `EMAIL_USERNAME`
+* `EMAIL_HOST` - This is the FQDN of the mail server to use when sending emails
+* `EMAIL_PORT` - The port to use when sending emails
+* `EMAIL_TRANSPORTSTRATEGY` - The transport strategy to use when sending emails
+* `SEARCH_INDEX_BASE` - The directory to store the lucene index files in
+* `EMAILSERVICE_URL` - The url to the special email service, this will result in the alternative email system being used
+* `EMAILSERVICE_USERNAME` - The username for the email service needs to be valid for `EMAIL_SERVICE_URL`
+* `EMAILSERVICE_PASSWORD` - The password for the email service needs to be valid for `EMAIL_SERVICE_URL`
+
 ### Environment Notes
 
 **Database** The system is designed to use the postgres service provided in the docker-compose file, therefore there should be no need to alter any of
 these settings. Only make alterations if running postgres as a separate service outside of docker-compose.
 
-**Web Api** The provided values will be used to define the CORS allowed origins. The port will be used to define http or https(443), if its not 80
- or 443 then it will be added to the url generated. The host must be the host used in the web url when accessing the catalogue in a web browser.
+**MDM_FQ_HOSTNAME** & **MDM_PORT** The provided values will be used to define the CORS allowed origins. The port will be used to define http or https
+(443), if its not 80 or 443 then it will be added to the url generated. The host must be the host used in the web url when accessing the catalogue
+ in a web browser.
 
 **Email** The standard email properties will allow emails to be sent to a specific SMTP server. The `emailservice` properties override this and
 send the email to the specified email service which will then forward it onto our email SMTP server.

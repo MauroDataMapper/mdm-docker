@@ -45,7 +45,9 @@ ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:
     LUCENE_REBUILD_ON_START=true \
     EMAILSERVICE_USERNAME="" \
     EMAILSERVICE_PASSWORD="" \
-    EMAILSERVICE_URL=""
+    EMAILSERVICE_URL="" \
+    MDM_FQ_HOSTNAME=localhost \
+    MDM_PORT=8080
 
 COPY config/mauro-data-mapper.xml ${CATALINA_HOME}/conf/Catalina/localhost/ROOT.xml
 
