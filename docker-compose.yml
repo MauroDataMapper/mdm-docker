@@ -10,6 +10,11 @@ services:
     mauro-data-mapper:
         build:
             context: mauro-data-mapper
+            args:
+                MDM_BASE_VERSION: develop
+                MDM_APPLICATION_COMMIT: develop
+                MDM_UI_COMMIT: develop
+                TOMCAT_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
         environment:
             PGPASSWORD: postgresisawesome
             MDM_FQ_HOSTNAME: localhost

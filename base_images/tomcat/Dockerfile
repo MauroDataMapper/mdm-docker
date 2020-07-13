@@ -1,6 +1,7 @@
 # Update tomcat image
-ARG TOMCAT_VERSION=9.0.27-jdk12-adoptopenjdk-openj9
-FROM tomcat:$TOMCAT_VERSION
+ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9
+
+FROM tomcat:$TOMCAT_IMAGE_VERSION
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
 RUN apt-get update

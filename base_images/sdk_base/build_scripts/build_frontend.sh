@@ -2,5 +2,5 @@
 
 source "$NVM_DIR/nvm.sh"
 cd $MDM_UI_HOME
-npm install
+npm ci
 ng build --prod

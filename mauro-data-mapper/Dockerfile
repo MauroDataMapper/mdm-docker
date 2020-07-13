@@ -1,25 +1,32 @@
-FROM tomcat:9.0.27-jdk12-adoptopenjdk-openj9 AS updated_tomcat
+
+ARG MDM_BASE_IMAGE_VERSION=develop
+ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9
+
+FROM mdm/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install -y postgresql-client curl ttf-dejavu
+ARG MDM_APPLICATION_COMMIT=develop
+ARG MDM_UI_COMMIT=develop
 
-COPY ./bin /usr/local/bin
-RUN chmod +x /usr/local/bin/*
-RUN mkdir /lucene
+# Checkout the desired versions
+RUN cd "$MDM_APPLICATION_HOME" && git checkout "$MDM_APPLICATION_COMMIT" && git pull
+RUN cd "$MDM_UI_HOME" && git checkout "$MDM_UI_COMMIT" && git pull
 
-RUN rm -rf ${CATALINA_HOME}/webapps/*
+# Build the front and back ends
+RUN build_backend.sh
+RUN build_frontend.sh
 
-VOLUME ${CATALINA_HOME}/logs
-VOLUME /lucene
-VOLUME /tmp
+# Build the full MDM application
+WORKDIR $MDM_BUILD_HOME
 
-ENTRYPOINT ["wait-for-postgres.sh"]
-CMD ["start-tomcat.sh"]
+RUN echo "$(ls $MDM_APPLICATION_BUILD_HOME/*.war | tail -1)" | xargs jar xvf
+RUN cp -r $MDM_UI_BUILD_HOME/* .
+RUN ls
 
-####
-FROM updated_tomcat
+FROM mdm/tomcat:$TOMCAT_IMAGE_VERSION
+LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
+
+ARG MDM_BUILD_HOME=/opt/mdm
 
 ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops" \
     DATABASE_HOST=postgres \
@@ -40,5 +47,4 @@ ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:
 
 COPY config/mauro-data-mapper.xml ${CATALINA_HOME}/conf/Catalina/localhost/ROOT.xml
 
-COPY lib/build ${CATALINA_HOME}/webapps/ROOT
-
+COPY --from=mdm-build ${MDM_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT
