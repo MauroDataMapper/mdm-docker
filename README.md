@@ -98,12 +98,12 @@ Example
         build:
             context: mauro-data-mapper
             args:
-                ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-database:2.0.0-SNAPSHOT"
+                ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-keycloak:1.0.1"
 ```
 
-Will add the following to the `dependencies.gradle` file.
+Will add the keycloak plugin to the `dependencies.gradle` file:
 ```gradle
-runtimeOnly uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-database:2.0.0-SNAPSHOT
+runtimeOnly uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-keycloak:1.0.1
 ```
 
 ### Multiple instances
