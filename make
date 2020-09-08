@@ -60,7 +60,7 @@ set -e
 
 pushd base_images
 
-echo Making updated tomcat image $TOMCAT_IMAGE_VERSION
+echo "Making updated tomcat image $TOMCAT_IMAGE_VERSION"
 pushd tomcat
 docker build \
   --build-arg TOMCAT_IMAGE_VERSION=${TOMCAT_IMAGE_VERSION} \
@@ -68,10 +68,10 @@ docker build \
 popd
 
 echo
-echo -----------------------
+echo "-----------------------"
 echo
 
-echo Making base build image $SDK_IMAGE_VERSION
+echo "Making base build image $SDK_IMAGE_VERSION"
 pushd sdk_base
 docker build \
   --build-arg JDK_IMAGE_VERSION=${JDK_IMAGE_VERSION} \
@@ -81,10 +81,10 @@ docker build \
 popd
 
 echo
-echo -----------------------
+echo "-----------------------"
 echo
 
-echo Making mdm build image $MDM_IMAGE_VERSION
+echo "Making mdm build image $MDM_IMAGE_VERSION"
 pushd mdm_base
 docker build \
   --build-arg SDK_IMAGE_VERSION=${SDK_IMAGE_VERSION} \
@@ -92,12 +92,12 @@ docker build \
 popd
 
 echo
-echo -----------------------
+echo "-----------------------"
 echo
 
 popd
 
-echo Builing docker compose
+echo "Building docker compose"
 docker-compose build \
   --build-arg MDM_BASE_VERSION=${MDM_IMAGE_VERSION} \
   --build-arg MDM_APPLICATION_COMMIT=${MDM_APPLICATION_BRANCH} \

@@ -1,11 +1,19 @@
 # ~/.ssh/config
+Host *
+  ForwardAgent no
+  ForwardX11 no
+  ForwardX11Trusted yes
+  Port 22
+  Protocol 2
+  ServerAliveInterval 60
+  ServerAliveCountMax 30
 
 Host github-mdm-application
-HostName github.com
-User git
-IdentityFile ~/.ssh/id_rsa_application
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa_application
 
 Host github-mdm-ui
-HostName github.com
-User git
-IdentityFile ~/.ssh/id_rsa_ui
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa_ui
