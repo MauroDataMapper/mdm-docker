@@ -27,7 +27,13 @@ RUN source "$SDKMAN_DIR/bin/sdkman-init.sh" && sdk install grails "$GRAILS_VERSI
 
 # Copy in the ssh configuration to allow connection to Github
 COPY ssh /opt/ssh
-RUN mv /opt/ssh "/root/.ssh" && chmod 700 "/root/.ssh"
+RUN mv /opt/ssh "/root/.ssh"
+RUN chmod 700 "/root/.ssh"
+RUN chmod 600 "/root/.ssh/id_rsa_application"
+RUN chmod 644 "/root/.ssh/id_rsa_application.pub"
+RUN chmod 600 "/root/.ssh/id_rsa_ui"
+RUN chmod 644 "/root/.ssh/id_rsa_ui.pub"
+
 
 # Copy in the building scripts
 COPY build_scripts /usr/local/bin/
