@@ -146,6 +146,9 @@ Usually this is done in the docker-compose.yml file. It should not be done in th
 * `MDM_AUTHORITY_NAME` - A unique name used to distinguish a running MDM instance.
 * `PGPASSWORD` - This should be the password for the postgres instance being connected. When using the docker-compose.yml file and the configured
  postgres instance this should be left alone.
+* `EMAIL_USERNAME` - To allow the catalogue to send emails this needs to be a valid username for the `EMAIL_HOST`
+* `EMAIL_PASSWORD` - To allow the catalogue to send emails this needs to be a valid password for the `EMAIL_HOST` and `EMAIL_USERNAME`
+* `EMAIL_HOST` - This is the FQDN of the mail server to use when sending emails
 
 ### Optional
 
@@ -155,9 +158,6 @@ Usually this is done in the docker-compose.yml file. It should not be done in th
 * `DATABASE_NAME` - The name of the database which the catalogue data will be stored in 
 * `DATABASE_USERNAME` - Username to use to connect to the database
 * `DATABASE_PASSWORD` - Password to use to connect to the database
-* `EMAIL_USERNAME` - To allow the catalogue to send emails this needs to be a valid username for the `EMAIL_HOST`
-* `EMAIL_PASSWORD` - To allow the catalogue to send emails this needs to be a valid password for the `EMAIL_HOST` and `EMAIL_USERNAME`
-* `EMAIL_HOST` - This is the FQDN of the mail server to use when sending emails
 * `EMAIL_PORT` - The port to use when sending emails
 * `EMAIL_TRANSPORTSTRATEGY` - The transport strategy to use when sending emails
 * `SEARCH_INDEX_BASE` - The directory to store the lucene index files in

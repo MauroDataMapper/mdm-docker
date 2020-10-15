@@ -22,6 +22,9 @@ services:
             MDM_PORT: 8082
             MDM_AUTHORITY_URL: "http://localhost:8082"
             MDM_AUTHORITY_NAME: "mdm-docker"
+            EMAIL_USERNAME: ""
+            EMAIL_PASSWORD: ""
+            EMAIL_HOST: "smtp.gmail.com"
         ports:
             - "8082:8080"
         depends_on:
