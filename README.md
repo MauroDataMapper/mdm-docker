@@ -133,15 +133,28 @@ If this is the case you can change the `base_images/sdk_base/ssh/config` file,
 
 *Please see `mauro-data-mapper/Dockerfile` for all defaults*
 
-* `CATALINA_OPTS` - Java Opts to be passed to Tomcat 
-* `DATABASE_HOST` - The host of the database. If using docker-compose this should be left as `postgres` or changed to the name of the database
- service
+### Required to be overridden
+
+The following variables need to be overriden/set when starting up a new mauro-data-mapper image.
+Usually this is done in the docker-compose.yml file. It should not be done in the Dockerfile as each instance which starts up may use different
+ values.
+
+* `MDM_FQ_HOSTNAME` - The FQDN of the server where the catalogue will be accessed 
+* `MDM_PORT` - The port used to access the catalogue
+* `MDM_AUTHORITY_URL` - The full URL to the location of the catalogue. This is considered a unique identifier to distinguish any instance from
+ another and therefore no 2 instances should use the same URL.
+* `MDM_AUTHORITY_NAME` - A unique name used to distinguish a running MDM instance.
+* `PGPASSWORD` - This should be the password for the postgres instance being connected. When using the docker-compose.yml file and the configured
+ postgres instance this should be left alone.
+
+### Optional
+
+* `CATALINA_OPTS` - Java Opts to be passed to Tomcat
+* `DATABASE_HOST` - The host of the database. If using docker-compose this should be left as `postgres` or changed to the name of the database service
 * `DATABASE_PORT` - The port of the database 
 * `DATABASE_NAME` - The name of the database which the catalogue data will be stored in 
 * `DATABASE_USERNAME` - Username to use to connect to the database
 * `DATABASE_PASSWORD` - Password to use to connect to the database
-* `MDM_FQ_HOSTNAME` - The FQDN of the server where the catalogue will be accessed 
-* `MDM_PORT` - The port used to access the catalogue
 * `EMAIL_USERNAME` - To allow the catalogue to send emails this needs to be a valid username for the `EMAIL_HOST`
 * `EMAIL_PASSWORD` - To allow the catalogue to send emails this needs to be a valid password for the `EMAIL_HOST` and `EMAIL_USERNAME`
 * `EMAIL_HOST` - This is the FQDN of the mail server to use when sending emails

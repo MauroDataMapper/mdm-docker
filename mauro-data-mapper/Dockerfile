@@ -36,8 +36,12 @@ ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:
     DATABASE_NAME=maurodatamapper \
     DATABASE_USERNAME=maurodatamapperuser \
     DATABASE_PASSWORD=jF80LQyP4BbH \
-    EMAIL_USERNAME=REPLACE_ME \
-    EMAIL_PASSWORD=REPLACE_ME \
+    EMAIL_USERNAME="" \
+    EMAIL_PASSWORD="" \
+    MDM_FQ_HOSTNAME=localhost \
+    MDM_PORT=8080 \
+    MDM_AUTHORITY_URL="" \
+    MDM_AUTHORITY_NAME=""
     EMAIL_HOST=smtp.gmail.com \
     EMAIL_PORT=587 \
     EMAIL_TRANSPORTSTRATEGY=SMTP_TLS \
@@ -46,8 +50,7 @@ ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:
     EMAILSERVICE_USERNAME="" \
     EMAILSERVICE_PASSWORD="" \
     EMAILSERVICE_URL="" \
-    MDM_FQ_HOSTNAME=localhost \
-    MDM_PORT=8080
+
 
 COPY config/mauro-data-mapper.xml ${CATALINA_HOME}/conf/Catalina/localhost/ROOT.xml
 
