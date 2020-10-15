@@ -12,7 +12,11 @@ The following components are part of this system:
   - [Table Of Contents](#table-of-contents)
   - [Dependencies](#dependencies)
   - [Building](#building)
+    - [Additional Backend Plugins](#additional-backend-plugins)
+    - [Multiple Instances](#multiple-instances)
+    - [SSH Firewalled Servers](#ssh-firewalled-servers)
   - [Run Environment](#run-environment)
+    - [Environment Notes](#environment-notes)
   - [Migrating from Metadata Catalogue](#migrating-from-metadata-catalogue)
   - [Docker](#docker)
     - [The Docker Machine](#the-docker-machine)
@@ -39,6 +43,12 @@ Currently the minimum level of docker is
 * Compose: 1.25.5
 
 ---
+
+## Checking out the repository
+
+This should be possible using the normal `git checkout` command however it possible you're on an SSH firewalled server, in which case you can
+use the following [SSH over HTTPS document](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/using-ssh-over-the-https
+-port).
 
 ## Building
 
@@ -106,11 +116,17 @@ Will add the keycloak plugin to the `dependencies.gradle` file:
 runtimeOnly uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-keycloak:1.0.1
 ```
 
-### Multiple instances
+### Multiple Instances
 
 If running multiple docker-compose instances then they will all make use of the same initial images, therefore you only need to run the `./make` script
 once per server.
 
+### SSH Firewalled Servers
+
+Some servers have the 22 SSH port firewalled for external connections. 
+If this is the case you can change the `base_images/sdk_base/ssh/config` file,
+    * comment out the `Hostname` field thats currently active 
+    * uncomment both commented out `Hostname` and `Port` fields, this will allow git to work using the 443 port which will not be blocked.
 ---
 
 ## Run Environment
