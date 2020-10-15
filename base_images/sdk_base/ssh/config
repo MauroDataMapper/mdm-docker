@@ -10,10 +10,16 @@ Host *
 
 Host github-mdm-application
     HostName github.com
+    # Uncomment the following 2 lines and comment out the line above if operating inside a ssh locked down environment
+    #Hostname ssh.github.com
+    #Port 443
     User git
     IdentityFile ~/.ssh/id_rsa_application
 
 Host github-mdm-ui
     HostName github.com
+    # Uncomment the following 2 lines and comment out the line above if operating inside a ssh locked down environment
+    #Hostname ssh.github.com
+    #Port 443
     User git
     IdentityFile ~/.ssh/id_rsa_ui

@@ -29,11 +29,12 @@ RUN source "$SDKMAN_DIR/bin/sdkman-init.sh" && sdk install grails "$GRAILS_VERSI
 COPY ssh /opt/ssh
 RUN mv /opt/ssh "/root/.ssh"
 RUN chmod 700 "/root/.ssh"
+RUN chmod 600 "/root/.ssh/config"
 RUN chmod 600 "/root/.ssh/id_rsa_application"
 RUN chmod 644 "/root/.ssh/id_rsa_application.pub"
 RUN chmod 600 "/root/.ssh/id_rsa_ui"
 RUN chmod 644 "/root/.ssh/id_rsa_ui.pub"
-
+RUN chmod 644 "/root/.ssh/known_hosts"
 
 # Copy in the building scripts
 COPY build_scripts /usr/local/bin/
