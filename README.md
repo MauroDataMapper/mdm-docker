@@ -42,6 +42,15 @@ Currently the minimum level of docker is
 * Engine: 19.03.8
 * Compose: 1.25.5
 
+> :warning: **If you're running on Ubuntu**:
+> the default version of `docker-compose` installed with apt-get is 1.17.1, and you might get the error message:
+> ```bash
+> Building docker compose
+> ERROR: Need service name for --build-arg option
+> ```
+> In this case, you should uninstall `docker-compose` and re-install directly from Docker, following the instructions here:
+> [https://docs.docker.com/compose/install/]
+
 ---
 
 ## Checking out the repository
