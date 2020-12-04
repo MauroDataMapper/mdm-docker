@@ -10,8 +10,8 @@ ARG MDM_UI_COMMIT=develop
 ARG ADDITIONAL_PLUGINS=""
 
 # Checkout the desired versions
-RUN cd "$MDM_APPLICATION_HOME" && git checkout "$MDM_APPLICATION_COMMIT" && git pull
-RUN cd "$MDM_UI_HOME" && git checkout "$MDM_UI_COMMIT" && git pull
+RUN cd "$MDM_APPLICATION_HOME" && git fetch && git checkout "$MDM_APPLICATION_COMMIT" && git pull
+RUN cd "$MDM_UI_HOME" && git fetch && git checkout "$MDM_UI_COMMIT" && git pull
 
 # Build the front and back ends
 RUN build_frontend.sh
