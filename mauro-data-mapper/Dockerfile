@@ -8,6 +8,9 @@ LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 ARG MDM_APPLICATION_COMMIT=develop
 ARG MDM_UI_COMMIT=develop
 ARG ADDITIONAL_PLUGINS=""
+# This is needed to ensure the fetch and checkout are always run
+# If the arg is passed in using a random value then it will invalidate the docker cache and force the following steps to re-run
+ARG CACHE_BURST=1
 
 # Checkout the desired versions
 RUN cd "$MDM_APPLICATION_HOME" && git fetch && git checkout "$MDM_APPLICATION_COMMIT" && git pull
