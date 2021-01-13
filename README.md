@@ -67,6 +67,9 @@ also some properties may not be set as expected**
 ```bash
 # Build the entire system
 ./make
+
+# Update an already built system
+./update
 ```
 
 The above command will build all the necessary base images and then perform a `docker-compose build` to complete the build.
@@ -81,25 +84,36 @@ This script is required to
 At this point in time it will build the latest `develop` branches from [mdm-core](https://github.com/MauroDataMapper/mdm-core) and
 [mdm-ui](https://github.com/MauroDataMapper/mdm-ui).
 
-In the `./make` script the commit/branch to be built can be changed by using the parameters as shown below
+In the `./make` and `./update` scripts the commit/branch to be built can be changed by using the parameters as shown below
 
 ```bash
 Usage ./make [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
 
 -b, --back-end COMMIT_BRANCH    : The commit or branch to checkout and build for the back-end from mdm-core.
 -f, --front-end COMMIT_BRANCH   : The commit or branch to checkout and build for the front-end from mdm-ui
+
+Usage ./update [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
+
+-b, --back-end COMMIT_BRANCH    : The commit or branch to checkout and build for the back-end from mdm-core.
+-f, --front-end COMMIT_BRANCH   : The commit or branch to checkout and build for the front-end from mdm-ui
 ```
 
 Once the `./make` script has been run once the commit/branch choice can be altered by changing the build args in the `docker-compose.yml` file.
+
 ```yml
 mauro-data-mapper:
-        build:
-            context: mauro-data-mapper
-            args:
-                MDM_BASE_VERSION: develop
-                MDM_APPLICATION_COMMIT: develop
-                MDM_UI_COMMIT: develop
-                TOMCAT_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
+    build:
+        context: mauro-data-mapper
+        args:
+            MDM_BASE_IMAGE_VERSION: develop
+            MDM_APPLICATION_COMMIT: develop
+            MDM_UI_COMMIT: develop
+            TOMCAT_IMAGE_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
+
+    Usage ./make [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
+
+-b, --back-end COMMIT_BRANCH: The commit or branch to checkout and build for the back-end from mdm-core.
+-f, --front-end COMMIT_BRANCH: The commit or branch to checkout and build for the front-end from mdm-ui
 ```
 
 ### Additional Backend Plugins
