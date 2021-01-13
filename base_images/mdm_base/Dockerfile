@@ -1,4 +1,4 @@
-ARG SDK_IMAGE_VERSION=grails-4.0.3-jdk12-adoptopenjdk-openj9
+ARG SDK_IMAGE_VERSION=grails-4.0.6-jdk12-adoptopenjdk-openj9
 
 FROM mdm/sdk_base:$SDK_IMAGE_VERSION
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"

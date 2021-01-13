@@ -73,7 +73,7 @@ The above command will build all the necessary base images and then perform a `d
 
 This script is required to
 * build an updated OS version of tomcat which is where the application will run - `mdm/tomcat:9.0.27-jdk12-adoptopenjdk-openj9`
-* build the base SDK image for building the application in - `mdm/sdk_base:grails-4.0.3-adoptopenjdk-12-jdk-openj9`
+* build the base SDK image for building the application in - `mdm/sdk_base:grails-4.0.6-adoptopenjdk-12-jdk-openj9`
 * build an initial image with the code checked out and dependencies installed - `mdm/mdm_base:develop`
 
 *Once these 3 images are built the main docker-compose service will be able to build without the use of the `make` file.*

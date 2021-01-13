@@ -4,7 +4,7 @@ FROM adoptopenjdk:$JDK_IMAGE_VERSION
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
 # Default versions
-ARG GRAILS_VERSION=4.0.3
+ARG GRAILS_VERSION=4.0.6
 ARG NVM_VERSION=0.35.3
 
 # Set environment variables for SDKs
