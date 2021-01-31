@@ -53,10 +53,20 @@ Currently the minimum level of docker is
 
 ---
 
+## Requirements
+
+We advise a minimum of 2 CPUs and 4GBs RAM just to run this system this does not allow for the requirements to have an operating system running as
+well. Therefore we recommend a 4 CPU and 8GB RAM server.
+
+The default install of Docker inside Linux configures the docker engine with unlimited access to the server's resources, however if running in Windows
+or Mac OS X the Docker Toolbox will need to be configured
+
+---
+
 ## Checking out the repository
 
-This should be possible using the normal `git checkout` command however it possible you're on an SSH firewalled server, in which case you can
-use the following [SSH over HTTPS document](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/using-ssh-over-the-https
+This should be possible using the normal `git checkout` command however it possible you're on an SSH firewalled server, in which case you can use the
+following [SSH over HTTPS document](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/using-ssh-over-the-https
 -port).
 
 ## Building
