@@ -14,4 +14,6 @@
   <Parameter name="dataSource.host" value="${DATABASE_HOST}" />
   <Parameter name="dataSource.port" value="${DATABASE_PORT}" />
   <Parameter name="hibernate.search.default.indexBase" value="${SEARCH_INDEX_BASE}" />
+  <Parameter name="maurodatamapper.authority.url" value="${MDM_AUTHORITY_URL}" />
+  <Parameter name="maurodatamapper.authority.name" value="${MDM_AUTHORITY_NAME}" />
 </Context>

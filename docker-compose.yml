@@ -10,10 +10,22 @@ services:
     mauro-data-mapper:
         build:
             context: mauro-data-mapper
+            args:
+                CACHE_BURST: 1
+                MDM_BASE_IMAGE_VERSION: 4.0.0
+                MDM_APPLICATION_COMMIT: 4.0.0
+                MDM_UI_COMMIT: 5.0.0
+                TOMCAT_IMAGE_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
+                ADDITIONAL_PLUGINS: ""
         environment:
             PGPASSWORD: postgresisawesome
             MDM_FQ_HOSTNAME: localhost
             MDM_PORT: 8082
+            MDM_AUTHORITY_URL: "http://localhost:8082"
+            MDM_AUTHORITY_NAME: "mdm-docker"
+            EMAIL_USERNAME: ""
+            EMAIL_PASSWORD: ""
+            EMAIL_HOST: "smtp.gmail.com"
         ports:
             - "8082:8080"
         depends_on:

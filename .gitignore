@@ -146,7 +146,6 @@ logs/*.log
 ### Eclipse template
 
 .metadata
-bin/
 tmp/
 *.tmp
 *.bak

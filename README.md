@@ -12,7 +12,11 @@ The following components are part of this system:
   - [Table Of Contents](#table-of-contents)
   - [Dependencies](#dependencies)
   - [Building](#building)
+    - [Additional Backend Plugins](#additional-backend-plugins)
+    - [Multiple Instances](#multiple-instances)
+    - [SSH Firewalled Servers](#ssh-firewalled-servers)
   - [Run Environment](#run-environment)
+    - [Environment Notes](#environment-notes)
   - [Migrating from Metadata Catalogue](#migrating-from-metadata-catalogue)
   - [Docker](#docker)
     - [The Docker Machine](#the-docker-machine)
@@ -28,7 +32,7 @@ The following components are part of this system:
     - [`COPY` over `ADD`](#copy-over-add)
     - [`docker-compose`](#docker-compose)
 
---- 
+---
 
 ## Dependencies
 
@@ -38,41 +42,173 @@ Currently the minimum level of docker is
 * Engine: 19.03.8
 * Compose: 1.25.5
 
+> :warning: **If you're running on Ubuntu**:
+> the default version of `docker-compose` installed with apt-get is 1.17.1, and you might get the error message:
+> ```bash
+> Building docker compose
+> ERROR: Need service name for --build-arg option
+> ```
+> In this case, you should uninstall `docker-compose` and re-install directly from Docker, following the instructions here:
+> [https://docs.docker.com/compose/install/]
+
 ---
+
+## Requirements
+
+We advise a minimum of 2 CPUs and 4GBs RAM just to run this system this does not allow for the requirements to have an operating system running as
+well. Therefore we recommend a 4 CPU and 8GB RAM server.
+
+The default install of Docker inside Linux configures the docker engine with unlimited access to the server's resources, however if running in Windows
+or Mac OS X the Docker Toolbox will need to be configured
+
+---
+
+## Checking out the repository
+
+This should be possible using the normal `git checkout` command however it possible you're on an SSH firewalled server, in which case you can use the
+following [SSH over HTTPS document](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/using-ssh-over-the-https
+-port).
 
 ## Building
 
 **Please note this whole build system is still a work in progress and may not start up as expected,
 also some properties may not be set as expected**
 
-Currently you will need to 
+```bash
+# Build the entire system
+./make
 
-1. Build mdm-server using `grails war`
-1. Extract the war file to a folder
-1. Copy the contents of the extracted folder to `mauro-data-mapper/lib/build`, nominally
-    1. META-INF
-    1. org
-    1. WEB-INF
-1. Build the mdm-ui using `ng build --prod`
-1. Copy the contents of the `dist` folder to `mauro-data-mapper/lib/build`
-1. Run `docker-compose build`
+# Update an already built system
+./update
+```
 
-The above will build the Mauro Data Mapper into the `ROOT` directory of the Tomcat webapps folder.
+The above command will build all the necessary base images and then perform a `docker-compose build` to complete the build.
 
+This script is required to
+* build an updated OS version of tomcat which is where the application will run - `mdm/tomcat:9.0.27-jdk12-adoptopenjdk-openj9`
+* build the base SDK image for building the application in - `mdm/sdk_base:grails-4.0.6-adoptopenjdk-12-jdk-openj9`
+* build an initial image with the code checked out and dependencies installed - `mdm/mdm_base:develop`
+
+*Once these 3 images are built the main docker-compose service will be able to build without the use of the `make` file.*
+
+At this point in time it will build the latest `develop` branches from [mdm-core](https://github.com/MauroDataMapper/mdm-core) and
+[mdm-ui](https://github.com/MauroDataMapper/mdm-ui).
+
+In the `./make` and `./update` scripts the commit/branch to be built can be changed by using the parameters as shown below
+
+```bash
+Usage ./make [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
+
+-b, --back-end COMMIT_BRANCH    : The commit or branch to checkout and build for the back-end from mdm-core.
+-f, --front-end COMMIT_BRANCH   : The commit or branch to checkout and build for the front-end from mdm-ui
+
+Usage ./update [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
+
+-b, --back-end COMMIT_BRANCH    : The commit or branch to checkout and build for the back-end from mdm-core.
+-f, --front-end COMMIT_BRANCH   : The commit or branch to checkout and build for the front-end from mdm-ui
+```
+
+Once the `./make` script has been run once the commit/branch choice can be altered by changing the build args in the `docker-compose.yml` file.
+
+```yml
+mauro-data-mapper:
+    build:
+        context: mauro-data-mapper
+        args:
+            MDM_BASE_IMAGE_VERSION: develop
+            MDM_APPLICATION_COMMIT: develop
+            MDM_UI_COMMIT: develop
+            TOMCAT_IMAGE_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
+
+    Usage ./make [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
+
+-b, --back-end COMMIT_BRANCH: The commit or branch to checkout and build for the back-end from mdm-core.
+-f, --front-end COMMIT_BRANCH: The commit or branch to checkout and build for the front-end from mdm-ui
+```
+
+### Additional Backend Plugins
+
+Additional plugins can be found at the [Mauro Data Mapper Plugins](https://github.com/MauroDataMapper-Plugins) organisation page.
+Each of these can be added as `runtimeOnly` dependencies by adding them to the `ADDITIONAL_PLUGINS` build argument for the `mauro-data-mapper`
+service build.
+
+These dependencies should be provided in a semi-colon separated list in the gradle style, they will be split and each will be added as a `runtimeOnly`
+dependency.
+
+Example
+```yml
+ mauro-data-mapper:
+        build:
+            context: mauro-data-mapper
+            args:
+                ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-keycloak:1.0.1"
+```
+
+Will add the keycloak plugin to the `dependencies.gradle` file:
+```gradle
+runtimeOnly uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-keycloak:1.0.1
+```
+
+### Multiple Instances
+
+If running multiple docker-compose instances then they will all make use of the same initial images, therefore you only need to run the `./make` script
+once per server.
+
+### SSH Firewalled Servers
+
+Some servers have the 22 SSH port firewalled for external connections. 
+If this is the case you can change the `base_images/sdk_base/ssh/config` file,
+    * comment out the `Hostname` field thats currently active 
+    * uncomment both commented out `Hostname` and `Port` fields, this will allow git to work using the 443 port which will not be blocked.
 ---
 
 ## Run Environment
+
+*Please see `mauro-data-mapper/Dockerfile` for all defaults*
+
+### Required to be overridden
+
+The following variables need to be overriden/set when starting up a new mauro-data-mapper image.
+Usually this is done in the docker-compose.yml file. It should not be done in the Dockerfile as each instance which starts up may use different
+ values.
+
+* `MDM_FQ_HOSTNAME` - The FQDN of the server where the catalogue will be accessed 
+* `MDM_PORT` - The port used to access the catalogue
+* `MDM_AUTHORITY_URL` - The full URL to the location of the catalogue. This is considered a unique identifier to distinguish any instance from
+ another and therefore no 2 instances should use the same URL.
+* `MDM_AUTHORITY_NAME` - A unique name used to distinguish a running MDM instance.
+* `PGPASSWORD` - This should be the password for the postgres instance being connected. When using the docker-compose.yml file and the configured
+ postgres instance this should be left alone.
+* `EMAIL_USERNAME` - To allow the catalogue to send emails this needs to be a valid username for the `EMAIL_HOST`
+* `EMAIL_PASSWORD` - To allow the catalogue to send emails this needs to be a valid password for the `EMAIL_HOST` and `EMAIL_USERNAME`
+* `EMAIL_HOST` - This is the FQDN of the mail server to use when sending emails
+
+### Optional
+
+* `CATALINA_OPTS` - Java Opts to be passed to Tomcat
+* `DATABASE_HOST` - The host of the database. If using docker-compose this should be left as `postgres` or changed to the name of the database service
+* `DATABASE_PORT` - The port of the database 
+* `DATABASE_NAME` - The name of the database which the catalogue data will be stored in 
+* `DATABASE_USERNAME` - Username to use to connect to the database
+* `DATABASE_PASSWORD` - Password to use to connect to the database
+* `EMAIL_PORT` - The port to use when sending emails
+* `EMAIL_TRANSPORTSTRATEGY` - The transport strategy to use when sending emails
+* `SEARCH_INDEX_BASE` - The directory to store the lucene index files in
+* `EMAILSERVICE_URL` - The url to the special email service, this will result in the alternative email system being used
+* `EMAILSERVICE_USERNAME` - The username for the email service needs to be valid for `EMAIL_SERVICE_URL`
+* `EMAILSERVICE_PASSWORD` - The password for the email service needs to be valid for `EMAIL_SERVICE_URL`
 
 ### Environment Notes
 
 **Database** The system is designed to use the postgres service provided in the docker-compose file, therefore there should be no need to alter any of
 these settings. Only make alterations if running postgres as a separate service outside of docker-compose.
 
-**Web Api** The provided values will be used to define the CORS allowed origins. The port will be used to define http or https(443), if its not 80
- or 443 then it will be added to the url generated. The host must be the host used in the web url when accessing the catalogue in a web browser.
- 
- **Email** The standard email properties will allow emails to be sent to a specific SMTP server. The `emailservice` properties override this and 
- send the email to the specified email service which will then forward it onto our email SMTP server.
+**MDM_FQ_HOSTNAME** & **MDM_PORT** The provided values will be used to define the CORS allowed origins. The port will be used to define http or https
+(443), if its not 80 or 443 then it will be added to the url generated. The host must be the host used in the web url when accessing the catalogue
+ in a web browser.
+
+**Email** The standard email properties will allow emails to be sent to a specific SMTP server. The `emailservice` properties override this and
+send the email to the specified email service which will then forward it onto our email SMTP server.
 
 ---
 
