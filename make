@@ -31,7 +31,7 @@ if [ -n "$MDM_APPLICATION_BRANCH" ]
 then
   echo "Using backend branch $MDM_APPLICATION_BRANCH"
 else
-  MDM_APPLICATION_BRANCH='4.0.0'
+  MDM_APPLICATION_BRANCH='develop'
   echo "Using default backend branch $MDM_APPLICATION_BRANCH"
 fi
 
@@ -39,7 +39,7 @@ if [ -n "$MDM_UI_BRANCH" ]
 then
   echo "Using frontend branch $MDM_UI_BRANCH"
 else
-  MDM_UI_BRANCH='5.0.0'
+  MDM_UI_BRANCH='develop'
   echo "Using default frontend branch $MDM_UI_BRANCH"
 fi
 
