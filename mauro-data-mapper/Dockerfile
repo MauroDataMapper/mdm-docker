@@ -13,8 +13,8 @@ ARG ADDITIONAL_PLUGINS=""
 ARG CACHE_BURST=1
 
 # Checkout the desired versions
-RUN cd "$MDM_APPLICATION_HOME" && git fetch && git checkout "$MDM_APPLICATION_COMMIT" && git pull
-RUN cd "$MDM_UI_HOME" && git fetch && git checkout "$MDM_UI_COMMIT" && git pull
+RUN cd "$MDM_APPLICATION_HOME" && git fetch && git checkout "$MDM_APPLICATION_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi
+RUN cd "$MDM_UI_HOME" && git fetch && git checkout "$MDM_UI_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi
 
 # Build the front and back ends
 RUN build_frontend.sh
