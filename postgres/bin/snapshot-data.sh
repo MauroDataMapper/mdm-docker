@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-mkdir /database
+mkdir -p /database
 chown postgres /database
 su postgres
-pg_dump -a -U  -n public catalogue > /database/catalogue-data.sql
+pg_dump -U postgres -a maurodatamapper > /database/maurodatamapper-data.sql
+exit
 exit
