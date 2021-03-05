@@ -2,6 +2,7 @@ version: '3'
 services:
     postgres:
         build: ./postgres
+        shm_size: 512mb
         environment:
             POSTGRES_PASSWORD: postgresisawesome
         volumes:
@@ -11,11 +12,8 @@ services:
         build:
             context: mauro-data-mapper
             args:
-                CACHE_BURST: 1
-                MDM_BASE_IMAGE_VERSION: 4.1.0
-                MDM_APPLICATION_COMMIT: 4.1.0
-                MDM_UI_COMMIT: 5.0.0
-                TOMCAT_IMAGE_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
+                MDM_APPLICATION_COMMIT: 4.2.0
+                MDM_UI_COMMIT: 5.1.0
                 ADDITIONAL_PLUGINS: ""
         environment:
             PGPASSWORD: postgresisawesome

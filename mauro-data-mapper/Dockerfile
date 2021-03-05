@@ -1,12 +1,12 @@
 
-ARG MDM_BASE_IMAGE_VERSION=develop
+ARG MDM_BASE_IMAGE_VERSION=main
 ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9
 
 FROM mdm/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
-ARG MDM_APPLICATION_COMMIT=develop
-ARG MDM_UI_COMMIT=develop
+ARG MDM_APPLICATION_COMMIT=main
+ARG MDM_UI_COMMIT=main
 ARG ADDITIONAL_PLUGINS=""
 # This is needed to ensure the fetch and checkout are always run
 # If the arg is passed in using a random value then it will invalidate the docker cache and force the following steps to re-run
