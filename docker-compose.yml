@@ -12,7 +12,6 @@ services:
         build:
             context: mauro-data-mapper
             args:
-                CACHE_BURST: 1
                 MDM_APPLICATION_COMMIT: develop
                 MDM_UI_COMMIT: develop
                 ADDITIONAL_PLUGINS: ""

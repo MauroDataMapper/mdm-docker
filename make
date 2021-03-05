@@ -26,33 +26,32 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 ##################
 
-
-if [ -n "$MDM_APPLICATION_BRANCH" ]
-then
-  echo "Using backend branch $MDM_APPLICATION_BRANCH"
-else
-  MDM_APPLICATION_BRANCH='develop'
-  echo "Using default backend branch $MDM_APPLICATION_BRANCH"
-fi
-
-if [ -n "$MDM_UI_BRANCH" ]
-then
-  echo "Using frontend branch $MDM_UI_BRANCH"
-else
-  MDM_UI_BRANCH='develop'
-  echo "Using default frontend branch $MDM_UI_BRANCH"
-fi
-
 JAVA_VERSION=12
 ADOPTOPENJDK_VARIANT=openj9
 TOMCAT_VERSION=9.0.27
 GRAILS_VERSION=4.0.6
 NVM_VERSION=0.35.3
 
+MDM_IMAGE_VERSION=main
 TOMCAT_IMAGE_VERSION="$TOMCAT_VERSION-jdk$JAVA_VERSION-adoptopenjdk-$ADOPTOPENJDK_VARIANT"
 JDK_IMAGE_VERSION="$JAVA_VERSION-jdk-$ADOPTOPENJDK_VARIANT"
 SDK_IMAGE_VERSION="grails-$GRAILS_VERSION-jdk$JAVA_VERSION-adoptopenjdk-$ADOPTOPENJDK_VARIANT"
-MDM_IMAGE_VERSION=main
+
+BUILD_ARGS="--build-arg CACHE_BURST=$(date +%s) \
+  --build-arg MDM_BASE_IMAGE_VERSION=${MDM_IMAGE_VERSION} \
+  --build-arg TOMCAT_IMAGE_VERSION=${TOMCAT_IMAGE_VERSION}"
+
+if [ -n "$MDM_APPLICATION_BRANCH" ]
+then
+  echo "Using backend branch $MDM_APPLICATION_BRANCH"
+  BUILD_ARGS="$BUILD_ARGS --build-arg MDM_APPLICATION_COMMIT=${MDM_APPLICATION_BRANCH}"
+fi
+
+if [ -n "$MDM_UI_BRANCH" ]
+then
+  echo "Using frontend branch $MDM_UI_BRANCH"
+  BUILD_ARGS="$BUILD_ARGS --build-arg MDM_UI_COMMIT=${MDM_UI_BRANCH}"
+fi
 
 ##################
 
@@ -102,9 +101,4 @@ echo
 
 echo "Building docker compose"
 echo
-docker-compose build \
-  --build-arg CACHE_BURST=$(date +%s) \
-  --build-arg MDM_BASE_IMAGE_VERSION=${MDM_IMAGE_VERSION} \
-  --build-arg MDM_APPLICATION_COMMIT=${MDM_APPLICATION_BRANCH} \
-  --build-arg MDM_UI_COMMIT=${MDM_UI_BRANCH} \
-  --build-arg TOMCAT_IMAGE_VERSION=${TOMCAT_IMAGE_VERSION}
+docker-compose build $BUILD_ARGS
