@@ -52,7 +52,7 @@ NVM_VERSION=0.35.3
 TOMCAT_IMAGE_VERSION="$TOMCAT_VERSION-jdk$JAVA_VERSION-adoptopenjdk-$ADOPTOPENJDK_VARIANT"
 JDK_IMAGE_VERSION="$JAVA_VERSION-jdk-$ADOPTOPENJDK_VARIANT"
 SDK_IMAGE_VERSION="grails-$GRAILS_VERSION-jdk$JAVA_VERSION-adoptopenjdk-$ADOPTOPENJDK_VARIANT"
-MDM_IMAGE_VERSION=`echo $MDM_APPLICATION_BRANCH | sed -r 's|/|-|'`
+MDM_IMAGE_VERSION=main
 
 ##################
 
@@ -60,7 +60,9 @@ set -e
 
 pushd base_images
 
+echo
 echo "Making updated tomcat image $TOMCAT_IMAGE_VERSION"
+echo
 pushd tomcat
 docker build \
   --build-arg TOMCAT_IMAGE_VERSION=${TOMCAT_IMAGE_VERSION} \
@@ -72,6 +74,7 @@ echo "-----------------------"
 echo
 
 echo "Making base build image $SDK_IMAGE_VERSION"
+echo
 pushd sdk_base
 docker build \
   --build-arg JDK_IMAGE_VERSION=${JDK_IMAGE_VERSION} \
@@ -85,19 +88,20 @@ echo "-----------------------"
 echo
 
 echo "Making mdm build image $MDM_IMAGE_VERSION"
+echo
 pushd mdm_base
 docker build \
   --build-arg SDK_IMAGE_VERSION=${SDK_IMAGE_VERSION} \
   -t mdm/mdm_base:$MDM_IMAGE_VERSION .
+popd
 popd
 
 echo
 echo "-----------------------"
 echo
 
-popd
-
 echo "Building docker compose"
+echo
 docker-compose build \
   --build-arg CACHE_BURST=$(date +%s) \
   --build-arg MDM_BASE_IMAGE_VERSION=${MDM_IMAGE_VERSION} \

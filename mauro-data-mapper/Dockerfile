@@ -1,5 +1,5 @@
 
-ARG MDM_BASE_IMAGE_VERSION=develop
+ARG MDM_BASE_IMAGE_VERSION=main
 ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9
 
 FROM mdm/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build

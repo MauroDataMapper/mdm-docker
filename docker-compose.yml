@@ -12,10 +12,8 @@ services:
             context: mauro-data-mapper
             args:
                 CACHE_BURST: 1
-                MDM_BASE_IMAGE_VERSION: develop
                 MDM_APPLICATION_COMMIT: develop
                 MDM_UI_COMMIT: develop
-                TOMCAT_IMAGE_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
                 ADDITIONAL_PLUGINS: ""
         environment:
             PGPASSWORD: postgresisawesome

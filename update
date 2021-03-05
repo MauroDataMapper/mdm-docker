@@ -50,13 +50,14 @@ GRAILS_VERSION=4.0.6
 NVM_VERSION=0.35.3
 
 TOMCAT_IMAGE_VERSION="$TOMCAT_VERSION-jdk$JAVA_VERSION-adoptopenjdk-$ADOPTOPENJDK_VARIANT"
-MDM_IMAGE_VERSION=`echo $MDM_APPLICATION_BRANCH | sed -r 's|/|-|'`
+MDM_IMAGE_VERSION=main
 
 ##################
 
 set -e
 
 echo "Building docker compose"
+echo
 docker-compose build \
   --build-arg CACHE_BURST=$(date +%s) \
   --build-arg MDM_BASE_IMAGE_VERSION=${MDM_IMAGE_VERSION} \
