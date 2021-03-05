@@ -12,8 +12,8 @@ services:
         build:
             context: mauro-data-mapper
             args:
-                MDM_APPLICATION_COMMIT: develop
-                MDM_UI_COMMIT: develop
+                MDM_APPLICATION_COMMIT: 4.2.0
+                MDM_UI_COMMIT: 5.1.0
                 ADDITIONAL_PLUGINS: ""
         environment:
             PGPASSWORD: postgresisawesome

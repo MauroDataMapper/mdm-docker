@@ -17,8 +17,8 @@ RUN mkdir $MDM_BUILD_HOME
 WORKDIR /opt
 
 # Checkout the desired versions
-RUN git clone -b develop github-mdm-application:MauroDataMapper/mdm-application-build.git
-RUN git clone -b develop github-mdm-ui:MauroDataMapper/mdm-ui.git
+RUN git clone -b main github-mdm-application:MauroDataMapper/mdm-application-build.git
+RUN git clone -b main github-mdm-ui:MauroDataMapper/mdm-ui.git
 
 # Install the front and back end dependencies
 RUN build_backend.sh
