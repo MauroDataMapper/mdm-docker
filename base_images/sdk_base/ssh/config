@@ -3,7 +3,6 @@ Host *
   ForwardAgent no
   ForwardX11 no
   ForwardX11Trusted yes
-  Port 22
   Protocol 2
   ServerAliveInterval 60
   ServerAliveCountMax 30
