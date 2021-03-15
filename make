@@ -75,7 +75,7 @@ echo
 echo "Making base build image $SDK_IMAGE_VERSION"
 echo
 pushd sdk_base
-docker build \
+docker build --no-cache \
   --build-arg JDK_IMAGE_VERSION=${JDK_IMAGE_VERSION} \
   --build-arg GRAILS_VERSION=${GRAILS_VERSION} \
   --build-arg NVM_VERSION=${NVM_VERSION} \
