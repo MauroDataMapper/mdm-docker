@@ -5,7 +5,7 @@ LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
 # Default versions
 ARG GRAILS_VERSION=4.0.6
-ARG NVM_VERSION=0.35.3
+ARG NVM_VERSION=0.37.2
 
 # Set environment variables for SDKs
 ENV SDKMAN_DIR="/root/.sdkman"
