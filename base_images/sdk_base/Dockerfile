@@ -35,6 +35,3 @@ RUN chmod 644 "/root/.ssh/id_rsa_application.pub"
 RUN chmod 600 "/root/.ssh/id_rsa_ui"
 RUN chmod 644 "/root/.ssh/id_rsa_ui.pub"
 RUN chmod 644 "/root/.ssh/known_hosts"
-
-# Copy in the building scripts
-COPY build_scripts /usr/local/bin/

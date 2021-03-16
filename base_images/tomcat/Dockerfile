@@ -6,7 +6,7 @@ LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install -y postgresql-client curl ttf-dejavu
+RUN apt-get install -y postgresql-client curl ttf-dejavu fontconfig
 
 COPY ./bin /usr/local/bin
 RUN chmod +x /usr/local/bin/*
