@@ -39,8 +39,8 @@ The following components are part of this system:
 If using `Windows` or `OSX` you will need to install Docker.
 Currently the minimum level of docker is
 
-* Engine: 19.03.8
-* Compose: 1.25.5
+* Engine: 19.03.0+
+* Compose: 1.25.0+
 
 > :warning: **If you're running on Ubuntu**:
 > the default version of `docker-compose` installed with apt-get is 1.17.1, and you might get the error message:
