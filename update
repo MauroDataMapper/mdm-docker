@@ -25,7 +25,20 @@ done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 ##################
+# Functions
 
+getDate(){
+  date +"%Y-%m-%d %H:%M:%S,%sZ"
+}
+
+outputLine(){
+  echo
+  eval printf '%.0s-' {1..$(tput cols)}
+  echo
+}
+
+##################
+# Build Args
 BUILD_ARGS="--build-arg CACHE_BURST=$(date +%s)"
 
 if [ -n "$MDM_APPLICATION_BRANCH" ]
@@ -44,7 +57,19 @@ fi
 
 set -e
 
-echo "Rebuilding docker compose"
+outputLine
+
+echo "Using docker >> $(docker --version) << [Required 19.03.0+]"
+echo "Using docker-compose >> $(docker-compose -version) << [Recommended 1.27.0+]"
+
+outputLine
+
+echo "$(getDate) : Rebuilding docker compose"
 echo
-docker-compose build $BUILD_ARGS
+docker-compose build ${BUILD_ARGS}
+
+outputLine
+
+echo "$(getDate) : Restarting docker compose"
+echo
 docker-compose up -d

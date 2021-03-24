@@ -13,6 +13,9 @@ ENV MDM_UI_BUILD_HOME=$MDM_UI_HOME/dist
 # Copy in the building scripts
 COPY build_scripts /usr/local/bin/
 
+# Make sure all scripts are executable
+RUN chmod a+x /usr/local/bin/*
+
 # Make the build home
 RUN mkdir $MDM_BUILD_HOME
 
