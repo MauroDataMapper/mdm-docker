@@ -15,6 +15,7 @@ services:
                 MDM_APPLICATION_COMMIT: develop
                 MDM_UI_COMMIT: develop
                 ADDITIONAL_PLUGINS: ""
+                MDM_UI_THEME_NAME: ""
         environment:
             PGPASSWORD: postgresisawesome
             MDM_FQ_HOSTNAME: localhost
