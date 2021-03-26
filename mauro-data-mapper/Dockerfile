@@ -8,6 +8,7 @@ LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 ARG MDM_APPLICATION_COMMIT=main
 ARG MDM_UI_COMMIT=main
 ARG ADDITIONAL_PLUGINS=""
+ARG MDM_UI_THEME_NAME=""
 # This is needed to ensure the fetch and checkout are always run
 # If the arg is passed in using a random value then it will invalidate the docker cache and force the following steps to re-run
 ARG CACHE_BURST=1
