@@ -13,7 +13,7 @@ services:
             context: mauro-data-mapper
             args:
                 MDM_APPLICATION_COMMIT: 4.3.0
-                MDM_UI_COMMIT: 5.2.2
+                MDM_UI_COMMIT: 5.2.3
                 ADDITIONAL_PLUGINS: ""
                 MDM_UI_THEME_NAME: ""
         environment:
