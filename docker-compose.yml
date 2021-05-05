@@ -15,7 +15,7 @@ services:
                 MDM_APPLICATION_COMMIT: 4.4.1
                 MDM_UI_COMMIT: 6.0.0
                 ADDITIONAL_PLUGINS: ""
-                MDM_UI_THEME_NAME: ""
+                MDM_UI_THEME_NAME: "default"
         environment:
             PGPASSWORD: postgresisawesome
             MDM_FQ_HOSTNAME: localhost

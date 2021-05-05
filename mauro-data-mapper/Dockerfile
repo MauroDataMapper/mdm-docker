@@ -1,8 +1,8 @@
 
-ARG MDM_BASE_IMAGE_VERSION=main
+ARG MDM_BASE_IMAGE_VERSION=grails-4.0.6-jdk12-node-14.16-npm-7.11
 ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9
 
-FROM mdm/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
+FROM maurodatamapper/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
 ARG MDM_APPLICATION_COMMIT=main
@@ -29,7 +29,7 @@ RUN echo "$(ls $MDM_APPLICATION_BUILD_HOME/*.war | tail -1)" | xargs jar xvf
 RUN cp -r $MDM_UI_BUILD_HOME/* .
 RUN ls
 
-FROM mdm/tomcat:$TOMCAT_IMAGE_VERSION
+FROM maurodatamapper/tomcat:$TOMCAT_IMAGE_VERSION
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
 ARG MDM_BUILD_HOME=/opt/mdm

@@ -12,9 +12,10 @@ The following components are part of this system:
   - [Table Of Contents](#table-of-contents)
   - [Dependencies](#dependencies)
   - [Building](#building)
-    - [Additional Backend Plugins](#additional-backend-plugins)
-    - [Multiple Instances](#multiple-instances)
-    - [SSH Firewalled Servers](#ssh-firewalled-servers)
+      - [Updating](#updating)
+      - [Additional Backend Plugins](#additional-backend-plugins)
+      - [Multiple Instances](#multiple-instances)
+      - [SSH Firewalled Servers](#ssh-firewalled-servers)
   - [Run Environment](#run-environment)
     - [Environment Notes](#environment-notes)
   - [Migrating from Metadata Catalogue](#migrating-from-metadata-catalogue)
@@ -71,59 +72,43 @@ following [SSH over HTTPS document](https://docs.github.com/en/free-pro-team@lat
 
 ## Building
 
-**Please note this whole build system is still a work in progress and may not start up as expected,
-also some properties may not be set as expected**
+Once cloned then running the standard docker-compose build command will build the images necessary to run the services.
 
 ```bash
 # Build the entire system
-./make
-
-# Update an already built system
-./update
+$ ./docker-compose build
 ```
 
-The above command will build all the necessary base images and then perform a `docker-compose build` to complete the build.
+### Updating
 
-This script is required to
-* build an updated OS version of tomcat which is where the application will run - `mdm/tomcat:9.0.27-jdk12-adoptopenjdk-openj9`
-* build the base SDK image for building the application in - `mdm/sdk_base:grails-4.0.6-adoptopenjdk-12-jdk-openj9`
-* build an initial image with the code checked out and dependencies installed - `mdm/mdm_base:develop`
-
-*Once these 3 images are built the main docker-compose service will be able to build without the use of the `make` file.*
-
-At this point in time it will build the latest `develop` branches from [mdm-core](https://github.com/MauroDataMapper/mdm-core) and
-[mdm-ui](https://github.com/MauroDataMapper/mdm-ui).
-
-In the `./make` and `./update` scripts the commit/branch to be built can be changed by using the parameters as shown below
+Updating an already running system can be performed in 1 of 2 ways. The **preferred** method would be to pull the latest version tag from the
+repository and then rebuild the mauro-data-mapper service. However this may be hard if multiple changes have been made to the `docker-compose.yml` and
+you're not familiar enough with git to handle stashing and merging.
 
 ```bash
-Usage ./make [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
-
--b, --back-end COMMIT_BRANCH    : The commit or branch to checkout and build for the back-end from mdm-core.
--f, --front-end COMMIT_BRANCH   : The commit or branch to checkout and build for the front-end from mdm-ui
-
-Usage ./update [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
-
--b, --back-end COMMIT_BRANCH    : The commit or branch to checkout and build for the back-end from mdm-core.
--f, --front-end COMMIT_BRANCH   : The commit or branch to checkout and build for the front-end from mdm-ui
+# Update an already built system
+# Fetch the latest commits
+$ git fetch
+# Stash any local changes
+$ git stash
+# Checkout/pull the version you want to update to
+# git checkout B4.4.1_F6.0.0
+$ git checkout <TAG>
+# Unstash local changes, you may need to resolve any merge conflicts
+$ git stash pop
+# Build the new image
+$ docker-compose build mauro-data-mapper
+# Start the update
+$ docker-compose up -d mauro-data-mapper
 ```
 
-Once the `./make` script has been run once the commit/branch choice can be altered by changing the build args in the `docker-compose.yml` file.
+The alternative method is to use the update command script and pass in the new versions you want to update to. The downside with this method is if we
+have made any changes to the Dockerfiles or base versions you will not have them.
 
-```yml
-mauro-data-mapper:
-    build:
-        context: mauro-data-mapper
-        args:
-            MDM_BASE_IMAGE_VERSION: develop
-            MDM_APPLICATION_COMMIT: develop
-            MDM_UI_COMMIT: develop
-            TOMCAT_IMAGE_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
-
-    Usage ./make [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
-
--b, --back-end COMMIT_BRANCH: The commit or branch to checkout and build for the back-end from mdm-core.
--f, --front-end COMMIT_BRANCH: The commit or branch to checkout and build for the front-end from mdm-ui
+```bash
+# Update an already built system
+# ./update -b 4.4.1 -f 6.0.0
+$ ./update -b <BACKEND_VERSION> -f <FRONTEND VERSION>
 ```
 
 ### Additional Backend Plugins
