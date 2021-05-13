@@ -141,29 +141,40 @@ once per server.
 
 ### SSH Firewalled Servers
 
-Some servers have the 22 SSH port firewalled for external connections. 
-If this is the case you can change the `base_images/sdk_base/ssh/config` file,
-    * comment out the `Hostname` field thats currently active 
-    * uncomment both commented out `Hostname` and `Port` fields, this will allow git to work using the 443 port which will not be blocked.
+Some servers have the 22 SSH port firewalled for external connections. If this is the case you can change the `base_images/sdk_base/ssh/config` file,
+* comment out the `Hostname` field thats currently active * uncomment both commented out `Hostname` and `Port` fields, this will allow git to work
+using the 443 port which will not be blocked.
 ---
 
 ## Run Environment
+
+### postgres service
+
+*Please see `postgres/Dockerfile` for all defaults*
+
+* `POSTGRES_PASSWORD` - This sets the postgres user password for the service, as per the documentation at
+  [Postgres Docker Hub](https://hub.docker.com/_/postgres), it must be set for a docker postgres container. We have set a default but you can override
+  if desired.
+* `DATABASE_USERNAME` - This is the username which will be created inside the Postgres instance to own the database which the MDM service will use.
+  The username is also used by the MDM service to connect to the postgres instance, therefore if you change this you *MUST* also supply it in the
+  environment args for the MDM service
+* `DATABASE_PASSWORD` - This is the password set for the `DATABASE_USERNAME`. It is the password used by the MDM service to connect to this postgres
+  container.
+
+### mauro-data-mapper service
 
 *Please see `mauro-data-mapper/Dockerfile` for all defaults*
 
 ### Required to be overridden
 
-The following variables need to be overriden/set when starting up a new mauro-data-mapper image.
-Usually this is done in the docker-compose.yml file. It should not be done in the Dockerfile as each instance which starts up may use different
- values.
+The following variables need to be overriden/set when starting up a new mauro-data-mapper image. Usually this is done in the docker-compose.yml file.
+It should not be done in the Dockerfile as each instance which starts up may use different values.
 
-* `MDM_FQ_HOSTNAME` - The FQDN of the server where the catalogue will be accessed 
+* `MDM_FQ_HOSTNAME` - The FQDN of the server where the catalogue will be accessed
 * `MDM_PORT` - The port used to access the catalogue
 * `MDM_AUTHORITY_URL` - The full URL to the location of the catalogue. This is considered a unique identifier to distinguish any instance from
  another and therefore no 2 instances should use the same URL.
 * `MDM_AUTHORITY_NAME` - A unique name used to distinguish a running MDM instance.
-* `PGPASSWORD` - This should be the password for the postgres instance being connected. When using the docker-compose.yml file and the configured
- postgres instance this should be left alone.
 * `EMAIL_USERNAME` - To allow the catalogue to send emails this needs to be a valid username for the `EMAIL_HOST`
 * `EMAIL_PASSWORD` - To allow the catalogue to send emails this needs to be a valid password for the `EMAIL_HOST` and `EMAIL_USERNAME`
 * `EMAIL_HOST` - This is the FQDN of the mail server to use when sending emails
@@ -172,10 +183,10 @@ Usually this is done in the docker-compose.yml file. It should not be done in th
 
 * `CATALINA_OPTS` - Java Opts to be passed to Tomcat
 * `DATABASE_HOST` - The host of the database. If using docker-compose this should be left as `postgres` or changed to the name of the database service
-* `DATABASE_PORT` - The port of the database 
-* `DATABASE_NAME` - The name of the database which the catalogue data will be stored in 
-* `DATABASE_USERNAME` - Username to use to connect to the database
-* `DATABASE_PASSWORD` - Password to use to connect to the database
+* `DATABASE_PORT` - The port of the database
+* `DATABASE_NAME` - The name of the database which the catalogue data will be stored in
+* `DATABASE_USERNAME` - Username to use to connect to the database. See the Postgres service environment variables for more information.
+* `DATABASE_PASSWORD` - Password to use to connect to the database. See the Postgres service environment variables for more information.
 * `EMAIL_PORT` - The port to use when sending emails
 * `EMAIL_TRANSPORTSTRATEGY` - The transport strategy to use when sending emails
 * `SEARCH_INDEX_BASE` - The directory to store the lucene index files in

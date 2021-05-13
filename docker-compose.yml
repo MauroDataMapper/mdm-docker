@@ -4,7 +4,8 @@ services:
         build: ./postgres
         shm_size: 512mb
         environment:
-            POSTGRES_PASSWORD: postgresisawesome
+        #POSTGRES_PASSWORD: postgresisawesome
+        #DATABASE_PASSWORD:
         volumes:
             - postgres12:/var/lib/postgresql/data
         restart: on-failure:3
@@ -17,7 +18,7 @@ services:
                 ADDITIONAL_PLUGINS: ""
                 MDM_UI_THEME_NAME: "default"
         environment:
-            PGPASSWORD: postgresisawesome
+            #DATABASE_PASSWORD:
             MDM_FQ_HOSTNAME: localhost
             MDM_PORT: 8082
             MDM_AUTHORITY_URL: "http://localhost:8082"
