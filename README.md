@@ -12,9 +12,10 @@ The following components are part of this system:
   - [Table Of Contents](#table-of-contents)
   - [Dependencies](#dependencies)
   - [Building](#building)
-    - [Additional Backend Plugins](#additional-backend-plugins)
-    - [Multiple Instances](#multiple-instances)
-    - [SSH Firewalled Servers](#ssh-firewalled-servers)
+      - [Updating](#updating)
+      - [Additional Backend Plugins](#additional-backend-plugins)
+      - [Multiple Instances](#multiple-instances)
+      - [SSH Firewalled Servers](#ssh-firewalled-servers)
   - [Run Environment](#run-environment)
     - [Environment Notes](#environment-notes)
   - [Migrating from Metadata Catalogue](#migrating-from-metadata-catalogue)
@@ -71,64 +72,52 @@ following [SSH over HTTPS document](https://docs.github.com/en/free-pro-team@lat
 
 ## Building
 
-**Please note this whole build system is still a work in progress and may not start up as expected,
-also some properties may not be set as expected**
+Once cloned then running the standard docker-compose build command will build the images necessary to run the services.
 
 ```bash
 # Build the entire system
-./make
-
-# Update an already built system
-./update
+$ ./docker-compose build
 ```
 
-The above command will build all the necessary base images and then perform a `docker-compose build` to complete the build.
+### Updating
 
-This script is required to
-* build an updated OS version of tomcat which is where the application will run - `mdm/tomcat:9.0.27-jdk12-adoptopenjdk-openj9`
-* build the base SDK image for building the application in - `mdm/sdk_base:grails-4.0.6-adoptopenjdk-12-jdk-openj9`
-* build an initial image with the code checked out and dependencies installed - `mdm/mdm_base:develop`
-
-*Once these 3 images are built the main docker-compose service will be able to build without the use of the `make` file.*
-
-At this point in time it will build the latest `develop` branches from [mdm-core](https://github.com/MauroDataMapper/mdm-core) and
-[mdm-ui](https://github.com/MauroDataMapper/mdm-ui).
-
-In the `./make` and `./update` scripts the commit/branch to be built can be changed by using the parameters as shown below
+Updating an already running system can be performed in 1 of 2 ways. The **preferred** method would be to pull the latest version tag from the
+repository and then rebuild the mauro-data-mapper service. However this may be hard if multiple changes have been made to the `docker-compose.yml` and
+you're not familiar enough with git to handle stashing and merging.
 
 ```bash
-Usage ./make [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
-
--b, --back-end COMMIT_BRANCH    : The commit or branch to checkout and build for the back-end from mdm-core.
--f, --front-end COMMIT_BRANCH   : The commit or branch to checkout and build for the front-end from mdm-ui
-
-Usage ./update [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
-
--b, --back-end COMMIT_BRANCH    : The commit or branch to checkout and build for the back-end from mdm-core.
--f, --front-end COMMIT_BRANCH   : The commit or branch to checkout and build for the front-end from mdm-ui
+# Update an already built system
+# Fetch the latest commits
+$ git fetch
+# Stash any local changes
+$ git stash
+# Checkout/pull the version you want to update to
+# e.g. git checkout B4.4.1_F6.0.0
+$ git checkout <TAG>
+# Unstash local changes, you may need to resolve any merge conflicts
+$ git stash pop
+# Build the new image
+$ docker-compose build mauro-data-mapper
+# Start the update
+$ docker-compose up -d mauro-data-mapper
 ```
 
-Once the `./make` script has been run once the commit/branch choice can be altered by changing the build args in the `docker-compose.yml` file.
+The alternative method is to use the update command script and pass in the new versions you want to update to. The downside with this method is if we
+have made any changes to the Dockerfiles or base versions you will not have them.
 
-```yml
-mauro-data-mapper:
-    build:
-        context: mauro-data-mapper
-        args:
-            MDM_BASE_IMAGE_VERSION: develop
-            MDM_APPLICATION_COMMIT: develop
-            MDM_UI_COMMIT: develop
-            TOMCAT_IMAGE_VERSION: 9.0.27-jdk12-adoptopenjdk-openj9
-
-    Usage ./make [-b COMMIT_BRANCH] [-f COMMIT_BRANCH]
-
--b, --back-end COMMIT_BRANCH: The commit or branch to checkout and build for the back-end from mdm-core.
--f, --front-end COMMIT_BRANCH: The commit or branch to checkout and build for the front-end from mdm-ui
+```bash
+# Update an already built system
+# e.g ./update -b 4.4.1 -f 6.0.0
+$ ./update -b <BACKEND_VERSION> -f <FRONTEND VERSION>
 ```
 
 ### Additional Backend Plugins
 
-Additional plugins can be found at the [Mauro Data Mapper Plugins](https://github.com/MauroDataMapper-Plugins) organisation page.
+Additional plugins can be found at the [Mauro Data Mapper Plugins](https://github.com/MauroDataMapper-Plugins) organisation page. A complete list with
+versions can also be found in the [installation documentation](https://maurodatamapper.github.io/installing/plugins/)
+please note that while we will do our best to keep this page up-to-date there may be circumstances where it is behind, therefore we recommend using
+our official GitHub Plugins organisation to find the latest releases and all available plugins.
+
 Each of these can be added as `runtimeOnly` dependencies by adding them to the `ADDITIONAL_PLUGINS` build argument for the `mauro-data-mapper`
 service build.
 
@@ -136,49 +125,81 @@ These dependencies should be provided in a semi-colon separated list in the grad
 dependency.
 
 Example
+
 ```yml
  mauro-data-mapper:
-        build:
-            context: mauro-data-mapper
-            args:
-                ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-keycloak:1.0.1"
+   build:
+     context: mauro-data-mapper
+     args:
+       ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-excel:3.0.0"
 ```
 
-Will add the keycloak plugin to the `dependencies.gradle` file:
+Will add the Excel plugin to the `dependencies.gradle` file:
+
 ```gradle
-runtimeOnly uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-keycloak:1.0.1
+runtimeOnly uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-excel:3.0.0
 ```
+
+#### Dynamic Versions
+
+You can use [dynamic versioning](https://docs.gradle.org/current/userguide/single_versions.html) to add dependencies, however this comes with a risk
+that it pulls a version which does not comply with your expected version of mdm-application-build/mdm-core which may cause conflicts with other
+plugins, therefore we do **not** advise this approach.
+
+Example
+
+```yml
+ mauro-data-mapper:
+   build:
+     context: mauro-data-mapper
+     args:
+       ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-excel:3.+"
+```
+
+This will add the latest minor version of the Excel plugin.
 
 ### Multiple Instances
 
-If running multiple docker-compose instances then they will all make use of the same initial images, therefore you only need to run the `./make` script
-once per server.
+If running multiple docker-compose instances then they will all make use of the same initial images, therefore you only need to run the `./make`
+script once per server.
 
 ### SSH Firewalled Servers
 
-Some servers have the 22 SSH port firewalled for external connections. 
-If this is the case you can change the `base_images/sdk_base/ssh/config` file,
-    * comment out the `Hostname` field thats currently active 
-    * uncomment both commented out `Hostname` and `Port` fields, this will allow git to work using the 443 port which will not be blocked.
+Some servers have the 22 SSH port firewalled for external connections. If this is the case you can change the `base_images/sdk_base/ssh/config` file,
+
+* comment out the `Hostname` field thats currently active * uncomment both commented out `Hostname` and `Port` fields, this will allow git to work
+using the 443 port which will not be blocked.
 ---
 
 ## Run Environment
+
+### postgres service
+
+*Please see `postgres/Dockerfile` for all defaults*
+
+* `POSTGRES_PASSWORD` - This sets the postgres user password for the service, as per the documentation at
+  [Postgres Docker Hub](https://hub.docker.com/_/postgres), it must be set for a docker postgres container. We have set a default but you can override
+  if desired.
+* `DATABASE_USERNAME` - This is the username which will be created inside the Postgres instance to own the database which the MDM service will use.
+  The username is also used by the MDM service to connect to the postgres instance, therefore if you change this you *MUST* also supply it in the
+  environment args for the MDM service
+* `DATABASE_PASSWORD` - This is the password set for the `DATABASE_USERNAME`. It is the password used by the MDM service to connect to this postgres
+  container.
+
+### mauro-data-mapper service
 
 *Please see `mauro-data-mapper/Dockerfile` for all defaults*
 
 ### Required to be overridden
 
-The following variables need to be overriden/set when starting up a new mauro-data-mapper image.
-Usually this is done in the docker-compose.yml file. It should not be done in the Dockerfile as each instance which starts up may use different
- values.
+The following variables need to be overriden/set when starting up a new mauro-data-mapper image. Usually this is done in the docker-compose.yml file.
+It should not be done in the Dockerfile as each instance which starts up may use different values.
 
-* `MDM_FQ_HOSTNAME` - The FQDN of the server where the catalogue will be accessed 
+* `MDM_FQ_HOSTNAME` - The FQDN of the server where the catalogue will be accessed
 * `MDM_PORT` - The port used to access the catalogue
 * `MDM_AUTHORITY_URL` - The full URL to the location of the catalogue. This is considered a unique identifier to distinguish any instance from
  another and therefore no 2 instances should use the same URL.
 * `MDM_AUTHORITY_NAME` - A unique name used to distinguish a running MDM instance.
-* `PGPASSWORD` - This should be the password for the postgres instance being connected. When using the docker-compose.yml file and the configured
- postgres instance this should be left alone.
 * `EMAIL_USERNAME` - To allow the catalogue to send emails this needs to be a valid username for the `EMAIL_HOST`
 * `EMAIL_PASSWORD` - To allow the catalogue to send emails this needs to be a valid password for the `EMAIL_HOST` and `EMAIL_USERNAME`
 * `EMAIL_HOST` - This is the FQDN of the mail server to use when sending emails
@@ -187,10 +208,10 @@ Usually this is done in the docker-compose.yml file. It should not be done in th
 
 * `CATALINA_OPTS` - Java Opts to be passed to Tomcat
 * `DATABASE_HOST` - The host of the database. If using docker-compose this should be left as `postgres` or changed to the name of the database service
-* `DATABASE_PORT` - The port of the database 
-* `DATABASE_NAME` - The name of the database which the catalogue data will be stored in 
-* `DATABASE_USERNAME` - Username to use to connect to the database
-* `DATABASE_PASSWORD` - Password to use to connect to the database
+* `DATABASE_PORT` - The port of the database
+* `DATABASE_NAME` - The name of the database which the catalogue data will be stored in
+* `DATABASE_USERNAME` - Username to use to connect to the database. See the Postgres service environment variables for more information.
+* `DATABASE_PASSWORD` - Password to use to connect to the database. See the Postgres service environment variables for more information.
 * `EMAIL_PORT` - The port to use when sending emails
 * `EMAIL_TRANSPORTSTRATEGY` - The transport strategy to use when sending emails
 * `SEARCH_INDEX_BASE` - The directory to store the lucene index files in
