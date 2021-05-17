@@ -13,8 +13,8 @@ services:
         build:
             context: mauro-data-mapper
             args:
-                MDM_APPLICATION_COMMIT: 4.4.1
-                MDM_UI_COMMIT: 6.0.0
+                MDM_APPLICATION_COMMIT: 4.5.0
+                MDM_UI_COMMIT: 6.1.0
                 ADDITIONAL_PLUGINS: ""
                 MDM_UI_THEME_NAME: "default"
         environment:
