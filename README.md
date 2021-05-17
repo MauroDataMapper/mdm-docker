@@ -92,7 +92,7 @@ $ git fetch
 # Stash any local changes
 $ git stash
 # Checkout/pull the version you want to update to
-# git checkout B4.4.1_F6.0.0
+# e.g. git checkout B4.4.1_F6.0.0
 $ git checkout <TAG>
 # Unstash local changes, you may need to resolve any merge conflicts
 $ git stash pop
@@ -107,13 +107,17 @@ have made any changes to the Dockerfiles or base versions you will not have them
 
 ```bash
 # Update an already built system
-# ./update -b 4.4.1 -f 6.0.0
+# e.g ./update -b 4.4.1 -f 6.0.0
 $ ./update -b <BACKEND_VERSION> -f <FRONTEND VERSION>
 ```
 
 ### Additional Backend Plugins
 
-Additional plugins can be found at the [Mauro Data Mapper Plugins](https://github.com/MauroDataMapper-Plugins) organisation page.
+Additional plugins can be found at the [Mauro Data Mapper Plugins](https://github.com/MauroDataMapper-Plugins) organisation page. A complete list with
+versions can also be found in the [installation documentation](https://maurodatamapper.github.io/installing/plugins/)
+please note that while we will do our best to keep this page up-to-date there may be circumstances where it is behind, therefore we recommend using
+our official GitHub Plugins organisation to find the latest releases and all available plugins.
+
 Each of these can be added as `runtimeOnly` dependencies by adding them to the `ADDITIONAL_PLUGINS` build argument for the `mauro-data-mapper`
 service build.
 
@@ -121,27 +125,48 @@ These dependencies should be provided in a semi-colon separated list in the grad
 dependency.
 
 Example
+
 ```yml
  mauro-data-mapper:
-        build:
-            context: mauro-data-mapper
-            args:
-                ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-keycloak:1.0.1"
+   build:
+     context: mauro-data-mapper
+     args:
+       ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-excel:3.0.0"
 ```
 
-Will add the keycloak plugin to the `dependencies.gradle` file:
+Will add the Excel plugin to the `dependencies.gradle` file:
+
 ```gradle
-runtimeOnly uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-keycloak:1.0.1
+runtimeOnly uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-excel:3.0.0
 ```
+
+#### Dynamic Versions
+
+You can use [dynamic versioning](https://docs.gradle.org/current/userguide/single_versions.html) to add dependencies, however this comes with a risk
+that it pulls a version which does not comply with your expected version of mdm-application-build/mdm-core which may cause conflicts with other
+plugins, therefore we do **not** advise this approach.
+
+Example
+
+```yml
+ mauro-data-mapper:
+   build:
+     context: mauro-data-mapper
+     args:
+       ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-excel:3.+"
+```
+
+This will add the latest minor version of the Excel plugin.
 
 ### Multiple Instances
 
-If running multiple docker-compose instances then they will all make use of the same initial images, therefore you only need to run the `./make` script
-once per server.
+If running multiple docker-compose instances then they will all make use of the same initial images, therefore you only need to run the `./make`
+script once per server.
 
 ### SSH Firewalled Servers
 
 Some servers have the 22 SSH port firewalled for external connections. If this is the case you can change the `base_images/sdk_base/ssh/config` file,
+
 * comment out the `Hostname` field thats currently active * uncomment both commented out `Hostname` and `Port` fields, this will allow git to work
 using the 443 port which will not be blocked.
 ---
