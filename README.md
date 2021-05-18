@@ -179,7 +179,7 @@ using the 443 port which will not be blocked.
 
 * `POSTGRES_PASSWORD` - This sets the postgres user password for the service, as per the documentation at
   [Postgres Docker Hub](https://hub.docker.com/_/postgres), it must be set for a docker postgres container. We have set a default but you can override
-  if desired.
+  if desired. If you do override it, you will also need to change the `PGPASSWORD` env variable in the mauro-data-mapper section.
 * `DATABASE_USERNAME` - This is the username which will be created inside the Postgres instance to own the database which the MDM service will use.
   The username is also used by the MDM service to connect to the postgres instance, therefore if you change this you *MUST* also supply it in the
   environment args for the MDM service
@@ -206,6 +206,9 @@ It should not be done in the Dockerfile as each instance which starts up may use
 
 ### Optional
 
+* `PGPASSWORD` - This is the postgres user's password for the postgres server. This is an environment variable set to allow the MDM service to 
+  wait till the postgres service has completely finished starting up. It is only used to confirm the Postgres server is running and databases exist.
+  After this it is not used again. **If you change `POSTGRES_PASSWORD` you must change this to match**
 * `CATALINA_OPTS` - Java Opts to be passed to Tomcat
 * `DATABASE_HOST` - The host of the database. If using docker-compose this should be left as `postgres` or changed to the name of the database service
 * `DATABASE_PORT` - The port of the database
