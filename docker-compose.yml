@@ -4,8 +4,8 @@ services:
         build: ./postgres
         shm_size: 512mb
         environment:
-        #POSTGRES_PASSWORD: postgresisawesome
-        #DATABASE_PASSWORD:
+            POSTGRES_PASSWORD: postgresisawesome
+            #DATABASE_PASSWORD:
         volumes:
             - postgres12:/var/lib/postgresql/data
         restart: on-failure:3
