@@ -13,6 +13,10 @@ ARG MDM_UI_THEME_NAME=""
 # If the arg is passed in using a random value then it will invalidate the docker cache and force the following steps to re-run
 ARG CACHE_BURST=1
 
+# Uncomment if needing to bypass a SSH firewall
+#COPY ssh/config "/root/.ssh/config"
+#RUN chmod 600 "/root/.ssh/config"
+
 # Checkout the desired versions
 RUN cd "$MDM_APPLICATION_HOME" && git fetch && git checkout "$MDM_APPLICATION_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi
 RUN cd "$MDM_UI_HOME" && git fetch && git checkout "$MDM_UI_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi

@@ -1,0 +1,12 @@
+# ~/.ssh/config
+Host *
+  ForwardAgent no
+  ForwardX11 no
+  ForwardX11Trusted yes
+  Protocol 2
+  ServerAliveInterval 60
+  ServerAliveCountMax 30
+
+Host github.com
+    Hostname ssh.github.com
+    Port 443
