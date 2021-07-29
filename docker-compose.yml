@@ -5,32 +5,20 @@ services:
         shm_size: 512mb
         environment:
             POSTGRES_PASSWORD: postgresisawesome
-            #DATABASE_HOST: postgres
-            #DATABASE_PORT: 5432
-            #DATABASE_NAME: maurodatamapper
-            #DATABASE_USERNAME: maurodatamapperuser
-            #DATABASE_PASSWORD:
         volumes:
             - postgres12:/var/lib/postgresql/data
-        restart: on-failure:3
+        restart: on-failure
     mauro-data-mapper:
         build:
             context: mauro-data-mapper
             args:
-                MDM_APPLICATION_COMMIT: 4.7.0
-                MDM_UI_COMMIT: 6.3.1
+                MDM_APPLICATION_COMMIT: develop
+                MDM_UI_COMMIT: develop
                 ADDITIONAL_PLUGINS: ""
                 MDM_UI_THEME_NAME: "default"
         environment:
             PGPASSWORD: postgresisawesome
-            #DATABASE_PASSWORD:
-            MDM_FQ_HOSTNAME: localhost
-            MDM_PORT: 8082
-            MDM_AUTHORITY_URL: "http://localhost:8082"
-            MDM_AUTHORITY_NAME: "mdm-docker"
-            EMAIL_USERNAME: ""
-            EMAIL_PASSWORD: ""
-            EMAIL_HOST: "smtp.gmail.com"
+            runtime.config.path: /usr/local/tomcat/conf/runtime.yml
         ports:
             - "8082:8080"
         depends_on:
@@ -39,7 +27,8 @@ services:
             - lucene_index:/lucene
             - ./shared_volumes/logs/maurodatamapper:/usr/local/tomcat/logs
             - ./shared_volumes/tmp:/tmp
-        restart: on-failure:3
+            - ./mauro-data-mapper/config/runtime.yml:/usr/local/tomcat/conf/runtime.yml
+        restart: on-failure
 # Persistence capability to systems,
 # Any volumes labelled below will ensure persistence when containers removed unless the volume is removed as well
 volumes:

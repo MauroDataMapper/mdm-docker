@@ -1,6 +1,6 @@
 
 ARG MDM_BASE_IMAGE_VERSION=grails-4.0.6-jdk12-node-14.16-npm-7.11
-ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9
+ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9.1
 
 FROM maurodatamapper/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
@@ -22,6 +22,9 @@ ARG CACHE_BURST=1
 RUN cd "$MDM_APPLICATION_HOME" && git fetch && git checkout "$MDM_APPLICATION_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi
 RUN cd "$MDM_UI_HOME" && git fetch && git checkout "$MDM_UI_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi
 
+# Copy in build.yml
+COPY config/build.yml $MDM_APPLICATION_HOME/grails-app/conf/build.yml
+
 # Build the front and back ends
 RUN build_frontend.sh
 RUN copy_in_dependencies.sh $ADDITIONAL_PLUGINS
@@ -39,28 +42,6 @@ LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
 ARG MDM_BUILD_HOME=/opt/mdm
 
-ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops" \
-    DATABASE_HOST=postgres \
-    DATABASE_PORT=5432 \
-    DATABASE_NAME=maurodatamapper \
-    DATABASE_USERNAME=maurodatamapperuser \
-    DATABASE_PASSWORD=jF80LQyP4BbH \
-    EMAIL_USERNAME="" \
-    EMAIL_PASSWORD="" \
-    MDM_FQ_HOSTNAME=localhost \
-    MDM_PORT=8080 \
-    MDM_AUTHORITY_URL="" \
-    MDM_AUTHORITY_NAME="" \
-    EMAIL_HOST=smtp.gmail.com \
-    EMAIL_PORT=587 \
-    EMAIL_TRANSPORTSTRATEGY=SMTP_TLS \
-    SEARCH_INDEX_BASE="/lucene" \
-    LUCENE_REBUILD_ON_START=true \
-    EMAILSERVICE_USERNAME="" \
-    EMAILSERVICE_PASSWORD="" \
-    EMAILSERVICE_URL=""
-
-
-COPY config/mauro-data-mapper.xml ${CATALINA_HOME}/conf/Catalina/localhost/ROOT.xml
+ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops"
 
 COPY --from=mdm-build ${MDM_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT

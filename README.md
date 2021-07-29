@@ -12,11 +12,15 @@ The following components are part of this system:
   - [Table Of Contents](#table-of-contents)
   - [Dependencies](#dependencies)
   - [Building](#building)
-      - [Updating](#updating)
-      - [Additional Backend Plugins](#additional-backend-plugins)
-      - [Multiple Instances](#multiple-instances)
-      - [SSH Firewalled Servers](#ssh-firewalled-servers)
+    - [Updating](#updating)
+    - [Additional Backend Plugins](#additional-backend-plugins)
+    - [Multiple Instances](#multiple-instances)
+    - [SSH Firewalled Servers](#ssh-firewalled-servers)
   - [Run Environment](#run-environment)
+    - [Postgres service](#postgres-service)
+    - [Mauro Data Mapper service](#mauro-data-mapper-service)
+      - [build.yml File](#configbuildyml-file)
+      - [runtime.yml File](#configruntimeyml-file)
     - [Environment Notes](#environment-notes)
   - [Migrating from Metadata Catalogue](#migrating-from-metadata-catalogue)
   - [Docker](#docker)
@@ -167,72 +171,111 @@ script once per server.
 
 Some servers have the 22 SSH port firewalled for external connections. If this is the case you can change the `base_images/sdk_base/ssh/config` file,
 
-* comment out the `Hostname` field thats currently active * uncomment both commented out `Hostname` and `Port` fields, this will allow git to work
-using the 443 port which will not be blocked.
+* comment out the `Hostname` field thats currently active * uncomment both commented out `Hostname` and `Port` fields, this will allow git to work using the 443 port which
+  will not be blocked.
+
 ---
 
 ## Run Environment
 
+By adding variables to the `<service>.environment` section of the docker-compose.yml file you can pass them into the container as environment variables. These will override
+any existing configuration variables which are used by default. Any defaults and normally used environment variables can be found in the relevant service's Dockerfile at
+the `ENV` command.
+
 ### postgres service
 
-*Please see `postgres/Dockerfile` for all defaults*
-
 * `POSTGRES_PASSWORD` - This sets the postgres user password for the service, as per the documentation at
-  [Postgres Docker Hub](https://hub.docker.com/_/postgres), it must be set for a docker postgres container. We have set a default but you can override
-  if desired. If you do override it, you will also need to change the `PGPASSWORD` env variable in the mauro-data-mapper section.
-* `DATABASE_USERNAME` - This is the username which will be created inside the Postgres instance to own the database which the MDM service will use.
-  The username is also used by the MDM service to connect to the postgres instance, therefore if you change this you *MUST* also supply it in the
-  environment args for the MDM service
-* `DATABASE_PASSWORD` - This is the password set for the `DATABASE_USERNAME`. It is the password used by the MDM service to connect to this postgres
-  container.
+  [Postgres Docker Hub](https://hub.docker.com/_/postgres), it must be set for a docker postgres container. We have set a default but you can override if desired. If you do
+  override it, you will also need to change the `PGPASSWORD` env variable in the mauro-data-mapper section.
+* `DATABASE_USERNAME` - This is the username which will be created inside the Postgres instance to own the database which the MDM service will use. The username is also used
+  by the MDM service to connect to the postgres instance, therefore if you change this you *MUST* also supply it in the environment args for the MDM service
+* `DATABASE_PASSWORD` - This is the password set for the `DATABASE_USERNAME`. It is the password used by the MDM service to connect to this postgres container.
 
 ### mauro-data-mapper service
 
-*Please see `mauro-data-mapper/Dockerfile` for all defaults*
+Any grails configuration property found in any of the plugin.yml or application.yml files can be overridden through environment variables. They simply need to be provided in
+the "dot notation" form rather than the "YML new line" format.
 
-### Required to be overridden
+e.g. application.yml
 
-The following variables need to be overriden/set when starting up a new mauro-data-mapper image. Usually this is done in the docker-compose.yml file.
-It should not be done in the Dockerfile as each instance which starts up may use different values.
+```yml
+database:
+  host: localhost
+```
 
-* `MDM_FQ_HOSTNAME` - The FQDN of the server where the catalogue will be accessed
-* `MDM_PORT` - The port used to access the catalogue
-* `MDM_AUTHORITY_URL` - The full URL to the location of the catalogue. This is considered a unique identifier to distinguish any instance from
- another and therefore no 2 instances should use the same URL.
-* `MDM_AUTHORITY_NAME` - A unique name used to distinguish a running MDM instance.
-* `EMAIL_USERNAME` - To allow the catalogue to send emails this needs to be a valid username for the `EMAIL_HOST`
-* `EMAIL_PASSWORD` - To allow the catalogue to send emails this needs to be a valid password for the `EMAIL_HOST` and `EMAIL_USERNAME`
-* `EMAIL_HOST` - This is the FQDN of the mail server to use when sending emails
+would be overridden by docker-compose.yml
+
+```yml
+services:
+  mauro-data-mapper:
+    environment:
+        database.host: another-host
+
+```
+
+However to make life simpler and to avoid too many variables in the docker-compose.yml file we have supplied 2 additional methods of overriding the defaults. This replaces all
+of the previous releases environment variables setting in docker-compose.yml.
+
+The preference order for loaded sources of properties is
+
+1. Environment Variables
+2. runtime.yml
+3. build.yml
+4. application.yml
+5. plugin.yml - there are multiple versions of these as each plugin we build may supply their own
+
+#### config/build.yml File
+
+The build.yml file is built into the MDM service when the image is built and is a standard grails configuration file. Therefore any properties which can be safely set at build
+time for the image should be set into this file. This includes any properties which may be shared between multiple instances of MDM which all start from the same image.
+
+Our recommendation is that if only running 1 instance of MDM from 1 cloned repository then you should load all your properties into the build.yml file. For this reason we have
+supplied the build.yml file with all the properties which we either require to be overridden or expect may want to be overridden.
+
+#### config/runtime.yml File
+
+The runtime.yml file will be loaded into the container via the docker-compose.yml file. This is intended as the replacement for environment variable overrides, where each
+running container might have specifically set properties which differ from a common shared image.
+
+**NOTE: Do not change the environment variable `runtime.config.path` as this denotes the path inside the container where the config file will be found**
+
+#### Required to be overridden
+
+The following variables need to be overriden/set when starting up a new mauro-data-mapper image. Usually this is done in the docker-compose.yml file. It should not be done in
+the Dockerfile as each instance which starts up may use different values.
+
+* `grails.cors.allowedOrigins` - Should be set to a single FQDN URL which is the host where MDM will be accessed from. If using a proxy to break SSL then the origin would be
+  the hostname where the proxy sits, not the host of the server running the docker containers. The origin must include the protocol, i.e. https or http
+* `maurodatamapper.authority.name` - The full URL to the location of the catalogue. This is considered a unique identifier to distinguish any instance from another and
+  therefore no 2 instances should use the same URL.
+* `maurodatamapper.authority.url` - A unique name used to distinguish a running MDM instance.
+* `simplejavamail.smtp.username` - To allow the catalogue to send emails this needs to be a valid username for the `simplejavamail.smtp.host`
+* `simplejavamail.smtp.password` - To allow the catalogue to send emails this needs to be a valid password for the `simplejavamail.smtp.host`
+  and `simplejavamail.smtp.username`
+* `simplejavamail.smtp.host` - This is the FQDN of the mail server to use when sending emails
 
 ### Optional
 
-* `PGPASSWORD` - This is the postgres user's password for the postgres server. This is an environment variable set to allow the MDM service to 
-  wait till the postgres service has completely finished starting up. It is only used to confirm the Postgres server is running and databases exist.
-  After this it is not used again. **If you change `POSTGRES_PASSWORD` you must change this to match**
-* `CATALINA_OPTS` - Java Opts to be passed to Tomcat
-* `DATABASE_HOST` - The host of the database. If using docker-compose this should be left as `postgres` or changed to the name of the database service
-* `DATABASE_PORT` - The port of the database
-* `DATABASE_NAME` - The name of the database which the catalogue data will be stored in
-* `DATABASE_USERNAME` - Username to use to connect to the database. See the Postgres service environment variables for more information.
-* `DATABASE_PASSWORD` - Password to use to connect to the database. See the Postgres service environment variables for more information.
-* `EMAIL_PORT` - The port to use when sending emails
-* `EMAIL_TRANSPORTSTRATEGY` - The transport strategy to use when sending emails
-* `SEARCH_INDEX_BASE` - The directory to store the lucene index files in
-* `EMAILSERVICE_URL` - The url to the special email service, this will result in the alternative email system being used
-* `EMAILSERVICE_USERNAME` - The username for the email service needs to be valid for `EMAIL_SERVICE_URL`
-* `EMAILSERVICE_PASSWORD` - The password for the email service needs to be valid for `EMAIL_SERVICE_URL`
+* `PGPASSWORD` - This is the postgres user's password for the postgres server. This is an environment variable set to allow the MDM service to wait till the postgres service
+  has completely finished starting up. It is only used to confirm the Postgres server is running and databases exist. After this it is not used again. **If you
+  change `POSTGRES_PASSWORD` you must change this to match**
+  **This can ONLY be overridden in the docker-compose.yml file**
+* `CATALINA_OPTS` - Java Opts to be passed to Tomcat **This can ONLY be overridden in the docker-compose.yml file**
+* `database.host` - The host of the database. If using docker-compose this should be left as `postgres` or changed to the name of the database service
+* `database.port` - The port of the database
+* `database.name` - The name of the database which the catalogue data will be stored in
+* `dataSource.username` - Username to use to connect to the database. See the Postgres service environment variables for more information.
+* `dataSource.password` - Password to use to connect to the database. See the Postgres service environment variables for more information.
+* `simplejavamail.smtp.port` - The port to use when sending emails
+* `simplejavamail.smtp.transportstrategy` - The transport strategy to use when sending emails
+* `hibernate.search.default.indexBase` - The directory to store the lucene index files in
 
 ### Environment Notes
 
-**Database** The system is designed to use the postgres service provided in the docker-compose file, therefore there should be no need to alter any of
-these settings. Only make alterations if running postgres as a separate service outside of docker-compose.
+**Database** The system is designed to use the postgres service provided in the docker-compose file, therefore there should be no need to alter any of these settings. Only
+make alterations if running postgres as a separate service outside of docker-compose.
 
-**MDM_FQ_HOSTNAME** & **MDM_PORT** The provided values will be used to define the CORS allowed origins. The port will be used to define http or https
-(443), if its not 80 or 443 then it will be added to the url generated. The host must be the host used in the web url when accessing the catalogue
- in a web browser.
-
-**Email** The standard email properties will allow emails to be sent to a specific SMTP server. The `emailservice` properties override this and
-send the email to the specified email service which will then forward it onto our email SMTP server.
+**Email** The standard email properties will allow emails to be sent to a specific SMTP server.
 
 ---
 
@@ -330,7 +373,7 @@ We recommend adding the following lines to the appropriate bash profile file:
 
 ```bash
 alias docker-compose-dev="docker-compose -f docker-compose.yml -f docker-compose.dev.yml"
-alias docker-compose-prod="docker-compose -f docker-compose.yml -f docker-compose.dev.yml"
+alias docker-compose-prod="docker-compose -f docker-compose.yml -f docker-compose.prod.yml"
 ```
 This will allow you to start compose in dev mode without all the extra file definitions
 
