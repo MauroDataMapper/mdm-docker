@@ -9,6 +9,7 @@ services:
             - postgres12:/var/lib/postgresql/data
         restart: on-failure
     mauro-data-mapper:
+        image: 'maurodatamapper/mauro-data-mapper:develop'
         build:
             context: mauro-data-mapper
             args:
