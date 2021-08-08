@@ -1,6 +1,6 @@
 
 ARG MDM_BASE_IMAGE_VERSION=grails-4.0.6-jdk12-node-14.16-npm-7.11
-ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9
+ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9.R2
 
 FROM maurodatamapper/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
@@ -14,6 +14,8 @@ ARG MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES="true"
 # If the arg is passed in using a random value then it will invalidate the docker cache and force the following steps to re-run
 ARG CACHE_BURST=1
 
+ARG MDM_UI_URL=http://jenkins.cs.ox.ac.uk/artifactory/libs-release/uk/ac/ox/softeng/maurodatamapper/mdm-ui/${MDM_UI_COMMIT}/mdm-ui-${MDM_UI_COMMIT}.tgz
+
 # Uncomment if needing to bypass a SSH firewall
 #COPY ssh/config "/root/.ssh/config"
 #RUN chmod 600 "/root/.ssh/config"
@@ -22,8 +24,22 @@ ARG CACHE_BURST=1
 RUN cd "$MDM_APPLICATION_HOME" && git fetch && git checkout "$MDM_APPLICATION_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi
 RUN cd "$MDM_UI_HOME" && git fetch && git checkout "$MDM_UI_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi
 
+# Copy in build.yml
+COPY config/build.yml $MDM_APPLICATION_HOME/grails-app/conf/build.yml
+
 # Build the front and back ends
-RUN build_frontend.sh
+# If performing a default release build for the UI then download the precompiled archive
+# Otherwise build manually
+RUN if [[ ${MDM_UI_THEME_NAME} != "default" || ${MDM_UI_COMMIT} == "develop" || ${MDM_UI_COMMIT} == "main" ]]; \
+    then build_frontend.sh; \
+    else  cd /opt && \
+          curl -LO $MDM_UI_URL && \
+          tar xzf mdm-ui-${MDM_UI_COMMIT}.tgz && \
+          mkdir $MDM_UI_BUILD_HOME && \
+          cp -r mdm-ui-${MDM_UI_COMMIT}/* $MDM_UI_BUILD_HOME; \
+    fi;
+# The only way to include plugins is to build the API manually, however this actually takes very little time as we already have all the
+# dependencies downloaded
 RUN copy_in_dependencies.sh $ADDITIONAL_PLUGINS
 RUN build_backend.sh
 
@@ -39,28 +55,6 @@ LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
 
 ARG MDM_BUILD_HOME=/opt/mdm
 
-ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops" \
-    DATABASE_HOST=postgres \
-    DATABASE_PORT=5432 \
-    DATABASE_NAME=maurodatamapper \
-    DATABASE_USERNAME=maurodatamapperuser \
-    DATABASE_PASSWORD=jF80LQyP4BbH \
-    EMAIL_USERNAME="" \
-    EMAIL_PASSWORD="" \
-    MDM_FQ_HOSTNAME=localhost \
-    MDM_PORT=8080 \
-    MDM_AUTHORITY_URL="" \
-    MDM_AUTHORITY_NAME="" \
-    EMAIL_HOST=smtp.gmail.com \
-    EMAIL_PORT=587 \
-    EMAIL_TRANSPORTSTRATEGY=SMTP_TLS \
-    SEARCH_INDEX_BASE="/lucene" \
-    LUCENE_REBUILD_ON_START=true \
-    EMAILSERVICE_USERNAME="" \
-    EMAILSERVICE_PASSWORD="" \
-    EMAILSERVICE_URL=""
-
-
-COPY config/mauro-data-mapper.xml ${CATALINA_HOME}/conf/Catalina/localhost/ROOT.xml
+ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops"
 
 COPY --from=mdm-build ${MDM_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT

@@ -1,0 +1,51 @@
+---
+# Database connection details
+---
+database:
+    host: postgres
+    port: 5432
+    name: maurodatamapper
+dataSource:
+    username: maurodatamapperuser
+    password: jF80LQyP4BbH
+---
+# MDM configuration properties
+---
+maurodatamapper:
+    authority:
+        name: 'Mauro Data Mapper'
+        url: http://localhost
+---
+# Standard Email configuration
+---
+simplejavamail:
+    smtp:
+        username: ''
+        password: ''
+        host: smtp.gmail.com
+        port: 587
+    transportstrategy: SMTP_TLS
+---
+# mdm-plugin-email-proxy Configuration
+---
+#emailServiceUrl: ''
+#emailServiceUsername: ''
+#emailServicePassword: ''
+---
+# CORS
+# See http://docs.grails.org/latest/guide/theWebLayer.html#cors
+---
+grails:
+    cors:
+        enabled: true
+        # The following are the defaults
+        allowedOrigins: [ '*' ]
+        allowedMethods: [ 'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD' ]
+        allowedHeaders: [ 'origin', 'content-type', 'accept', 'authorization', 'pragma', 'cache-control' ]
+        #exposedHeaders: null
+        #maxAge: 1800
+        #allowCredentials: true
+hibernate:
+    search:
+        default:
+            indexBase: '/lucene'
