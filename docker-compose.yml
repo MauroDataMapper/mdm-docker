@@ -9,12 +9,12 @@ services:
             - postgres12:/var/lib/postgresql/data
         restart: on-failure
     mauro-data-mapper:
-        image: 'maurodatamapper/mauro-data-mapper:B4.9.0_F6.5.0'
+        image: 'maurodatamapper/mauro-data-mapper:B4.10.0_F6.6.0'
         build:
             context: mauro-data-mapper
             args:
-                MDM_APPLICATION_COMMIT: 4.9.0
-                MDM_UI_COMMIT: 6.5.0
+                MDM_APPLICATION_COMMIT: 4.10.0
+                MDM_UI_COMMIT: 6.6.0
                 ADDITIONAL_PLUGINS: ""
                 MDM_UI_THEME_NAME: "default"
         environment:
