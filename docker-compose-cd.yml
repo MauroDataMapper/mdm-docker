@@ -9,19 +9,19 @@ services:
             - postgres12:/var/lib/postgresql/data
         restart: on-failure
     mauro-data-mapper:
-        image: 'maurodatamapper/mauro-data-mapper:B4.10.0_F6.6.0'
+        image: 'maurodatamapper/mauro-data-mapper:develop'
         build:
             context: mauro-data-mapper
             args:
-                MDM_APPLICATION_COMMIT: 4.10.0
-                MDM_UI_COMMIT: 6.6.0
+                MDM_APPLICATION_COMMIT: develop
+                MDM_UI_COMMIT: develop
                 ADDITIONAL_PLUGINS: ""
                 MDM_UI_THEME_NAME: "default"
         environment:
             PGPASSWORD: postgresisawesome
             runtime.config.path: /usr/local/tomcat/conf/runtime.yml
         ports:
-            - "8082:8080"
+            - "9000:8080"
         depends_on:
             - postgres
         volumes:
