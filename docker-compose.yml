@@ -1,6 +1,7 @@
 version: '3.8'
 services:
     postgres:
+        image: "maurodatamapper/postgres:latest"
         build: ./postgres
         shm_size: 512mb
         environment:
