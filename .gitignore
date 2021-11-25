@@ -201,4 +201,5 @@ local.properties
 .worksheet
 
 src/main/resources/*.properties
-shared_volumes/logs
+shared_volumes/*
+mauro-data-mapper/mdm-ui/*
