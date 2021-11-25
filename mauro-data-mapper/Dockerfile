@@ -25,6 +25,9 @@ RUN cd "$MDM_UI_HOME" && git fetch && git checkout "$MDM_UI_COMMIT" && if [[ `gi
 # Copy in build.yml
 COPY config/build.yml $MDM_APPLICATION_HOME/grails-app/conf/build.yml
 
+# Allow customisation of the UI
+COPY mdm-ui $MDM_UI_HOME/
+
 # Build the front and back ends
 # The front end build will try to use precompiled sources or it will build locally from the given commit/tagU
 RUN build_frontend.sh
