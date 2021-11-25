@@ -45,6 +45,8 @@ grails:
         #exposedHeaders: null
         #maxAge: 1800
         #allowCredentials: true
+    assets:
+        mapping: 'api_assets'
 hibernate:
     search:
         default:
