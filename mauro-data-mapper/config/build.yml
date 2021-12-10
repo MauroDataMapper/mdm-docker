@@ -22,8 +22,8 @@ simplejavamail:
     smtp:
         username: ''
         password: ''
-        host: smtp.gmail.com
-        port: 587
+        host: ''
+        port: ''
     transportstrategy: SMTP_TLS
 ---
 # mdm-plugin-email-proxy Configuration
