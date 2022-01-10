@@ -1,5 +1,5 @@
 
-ARG MDM_BASE_IMAGE_VERSION=grails-4.0.6-jdk12-node-14.16-npm-7.11.R2
+ARG MDM_BASE_IMAGE_VERSION=grails-4.0.6-jdk12-node-14.18.1-npm-8.3.0
 ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9.R2
 
 FROM maurodatamapper/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
