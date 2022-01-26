@@ -18,6 +18,7 @@ services:
                 MDM_UI_COMMIT: "${MDM_UI_COMMIT}"
                 ADDITIONAL_PLUGINS: ""
                 MDM_UI_THEME_NAME: "default"
+                CACHE_BURST: "${CACHE_BURST}"
         environment:
             PGPASSWORD: postgresisawesome
             runtime.config.path: /usr/local/tomcat/conf/runtime.yml

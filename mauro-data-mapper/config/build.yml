@@ -49,5 +49,6 @@ grails:
         mapping: 'api_assets'
 hibernate:
     search:
-        default:
-            indexBase: '/lucene'
+        backend:
+            directory:
+                root: '/lucene'
