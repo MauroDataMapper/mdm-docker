@@ -39,7 +39,8 @@ grails:
     cors:
         enabled: true
         # The following are the defaults
-        allowedOrigins: [ '*' ]
+        # allowedOrigins: [] # Cannot use allowedOrigins with *, they have to be clearly stated origins
+        allowedOriginPatterns: [ '*' ]
         allowedMethods: [ 'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD' ]
         allowedHeaders: [ 'origin', 'content-type', 'accept', 'authorization', 'pragma', 'cache-control' ]
         #exposedHeaders: null
