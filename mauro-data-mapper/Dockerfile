@@ -1,6 +1,6 @@
 
-ARG MDM_BASE_IMAGE_VERSION=grails-4.0.6-jdk12-node-14.16-npm-7.11.R2
-ARG TOMCAT_IMAGE_VERSION=9.0.27-jdk12-adoptopenjdk-openj9.R2
+ARG MDM_BASE_IMAGE_VERSION=grails-5.1.2-jdk17.0.1_12-node-14.18.1-npm-8.3.0
+ARG TOMCAT_IMAGE_VERSION=9.0.58-jre17-temurin
 
 FROM maurodatamapper/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
@@ -24,6 +24,9 @@ RUN cd "$MDM_UI_HOME" && git fetch && git checkout "$MDM_UI_COMMIT" && if [[ `gi
 
 # Copy in build.yml
 COPY config/build.yml $MDM_APPLICATION_HOME/grails-app/conf/build.yml
+
+# Allow customisation of the UI
+COPY mdm-ui $MDM_UI_HOME/
 
 # Build the front and back ends
 # The front end build will try to use precompiled sources or it will build locally from the given commit/tagU

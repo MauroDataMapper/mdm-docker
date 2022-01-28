@@ -22,8 +22,8 @@ simplejavamail:
     smtp:
         username: ''
         password: ''
-        host: smtp.gmail.com
-        port: 587
+        host: ''
+        port: ''
     transportstrategy: SMTP_TLS
 ---
 # mdm-plugin-email-proxy Configuration
@@ -39,13 +39,17 @@ grails:
     cors:
         enabled: true
         # The following are the defaults
-        allowedOrigins: [ '*' ]
+        # allowedOrigins: [] # Cannot use allowedOrigins with *, they have to be clearly stated origins
+        allowedOriginPatterns: [ '*' ]
         allowedMethods: [ 'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD' ]
         allowedHeaders: [ 'origin', 'content-type', 'accept', 'authorization', 'pragma', 'cache-control' ]
         #exposedHeaders: null
         #maxAge: 1800
         #allowCredentials: true
+    assets:
+        mapping: 'api_assets'
 hibernate:
     search:
-        default:
-            indexBase: '/lucene'
+        backend:
+            directory:
+                root: '/lucene'

@@ -14,10 +14,11 @@ services:
         build:
             context: mauro-data-mapper
             args:
-                MDM_APPLICATION_COMMIT: 4.11.0
-                MDM_UI_COMMIT: 6.7.0
+                MDM_APPLICATION_COMMIT: 5.0.0
+                MDM_UI_COMMIT: 7.0.0
                 ADDITIONAL_PLUGINS: ""
                 MDM_UI_THEME_NAME: "default"
+                CACHE_BURST: "${CACHE_BURST}"
         environment:
             PGPASSWORD: postgresisawesome
             runtime.config.path: /usr/local/tomcat/conf/runtime.yml
