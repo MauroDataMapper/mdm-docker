@@ -1,6 +1,6 @@
 
-ARG MDM_BASE_IMAGE_VERSION=grails-5.1.2-jdk17.0.1_12-node-14.18.1-npm-8.3.0
-ARG TOMCAT_IMAGE_VERSION=9.0.58-jre17-temurin
+ARG MDM_BASE_IMAGE_VERSION=grails-5.1.7-jdk17.0.3_7-node-14.18.1-npm-8.3.0
+ARG TOMCAT_IMAGE_VERSION=9.0.62-jre17-temurin
 
 FROM maurodatamapper/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
 LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
