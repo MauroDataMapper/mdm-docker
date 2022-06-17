@@ -14,6 +14,7 @@ ARG MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES="true"
 ARG DEPLOY_MDM_EXPLORER=0
 ARG MDM_EXPLORER_VERSION="1.0.0-SNAPSHOT"
 ARG MDM_EXPLORER_BUILD_HOME=/opt/mdm-explorer/dist
+ARG MDM_EXPLORER_API_ENDPOINT="http://localhost:${MDM_PORT}/api"
 
 # This is needed to ensure the fetch and checkout are always run
 # If the arg is passed in using a random value then it will invalidate the docker cache and force the following steps to re-run

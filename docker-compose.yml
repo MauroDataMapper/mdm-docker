@@ -19,6 +19,7 @@ services:
                 ADDITIONAL_PLUGINS: ""
                 MDM_UI_THEME_NAME: "default"
                 CACHE_BURST: "${CACHE_BURST}"
+                MDM_EXPLORER_API_ENDPOINT: "http://localhost:${MDM_PORT}/api"
         environment:
             PGPASSWORD: postgresisawesome
             runtime.config.path: /usr/local/tomcat/conf/runtime.yml

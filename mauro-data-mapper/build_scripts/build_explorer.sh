@@ -19,6 +19,8 @@ precompiledBuild(){
   tar xzf "mdm-explorer-${MDM_EXPLORER_VERSION}.tgz"
   mkdir "$MDM_EXPLORER_BUILD_HOME"
   cp -r "mdm-explorer-${MDM_EXPLORER_VERSION}"/* "$MDM_EXPLORER_BUILD_HOME"
+
+  find "$MDM_EXPLORER_BUILD_HOME" -name main.*.js -exec sed -e "s|apiEndpoint:\"api\",|apiEndpoint:\"${MDM_EXPLORER_API_ENDPOINT}\",|g" -i {} \;
 }
 
 precompiledBuild
