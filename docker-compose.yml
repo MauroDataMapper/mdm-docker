@@ -5,11 +5,11 @@ services:
         build: ./postgres
         shm_size: 512mb
         environment:
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            DATABASE_HOST: ${MDM_PG_HOST}
-            DATABASE_PORT: ${MDM_PG_PORT}
-            MDM_PG_USER_NAME: ${MDM_PG_USER_NAME}
-            MDM_PG_USER_PASSWORD: ${MDM_PG_USER_PASSWORD}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            DATABASE_HOST: ${MDM_DB_HOST}
+            DATABASE_PORT: ${MDM_DB_PORT}
+            MDM_DB_USER_NAME: ${MDM_DB_USER_NAME}
+            MDM_DB_USER_PASSWORD: ${MDM_DB_USER_PASSWORD}
         volumes:
             - postgres12:/var/lib/postgresql/data
         restart: on-failure
@@ -26,10 +26,10 @@ services:
         environment:
             runtime.config.path: /usr/local/tomcat/conf/runtime.yml
             PGPASSWORD: ${POSTGRES_PASSWORD}
-            MDM_PG_HOST: ${MDM_PG_HOST}
-            MDM_PG_PORT: ${MDM_PG_PORT}
-            MDM_PG_USER_NAME: ${MDM_PG_USER_NAME}
-            MDM_PG_USER_PASSWORD: ${MDM_PG_USER_PASSWORD}
+            MDM_DB_HOST: ${MDM_DB_HOST}
+            MDM_DB_PORT: ${MDM_DB_PORT}
+            MDM_DB_USER_NAME: ${MDM_DB_USER_NAME}
+            MDM_DB_USER_PASSWORD: ${MDM_DB_USER_PASSWORD}
             MDM_EMAIL_USERNAME: ${MDM_EMAIL_USERNAME}
             MDM_EMAIL_PASSWORD: ${MDM_EMAIL_PASSWORD}
             MDM_EMAIL_HOST: ${MDM_EMAIL_HOST}
