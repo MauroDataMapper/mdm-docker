@@ -26,10 +26,10 @@ services:
         environment:
             runtime.config.path: /usr/local/tomcat/conf/runtime.yml
             PGPASSWORD: ${DB_PASSWORD}
-            MDM_DB_HOST: ${MDM_DB_HOST}
-            MDM_DB_PORT: ${MDM_DB_PORT}
-            MDM_DB_USER_NAME: ${MDM_DB_USER_NAME}
-            MDM_DB_USER_PASSWORD: ${MDM_DB_USER_PASSWORD}
+            DATABASE_HOST: ${MDM_DB_HOST}
+            DATABASE_PORT: ${MDM_DB_PORT}
+            DATABASE_USERNAME: ${MDM_DB_USER_NAME}
+            DATABSE_PASSWORD: ${MDM_DB_USER_PASSWORD}
             MDM_EMAIL_USERNAME: ${MDM_EMAIL_USERNAME}
             MDM_EMAIL_PASSWORD: ${MDM_EMAIL_PASSWORD}
             MDM_EMAIL_HOST: ${MDM_EMAIL_HOST}

@@ -2,12 +2,12 @@
 # Database connection details
 ---
 database:
-    host: ${MDM_DB_HOST}
-    port: ${MDM_DB_PORT}
+    host: ${DATABASE_HOST}
+    port: ${DATABASE_PORT}
     name: maurodatamapper
 dataSource:
-    username: ${MDM_DB_USER_NAME}
-    password: ${MDM_DB_USER_PASSWORD}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 ---
 # MDM configuration properties
 ---
