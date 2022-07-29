@@ -5,7 +5,11 @@ services:
         build: ./postgres
         shm_size: 512mb
         environment:
-            POSTGRES_PASSWORD: postgresisawesome
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            MDM_PG_HOST: ${MDM_PG_HOST}
+            MDM_PG_PORT: ${MDM_PG_PORT}
+            MDM_PG_USER_NAME: ${MDM_PG_USER_NAME}
+            MDM_PG_USER_PASSWORD: ${MDM_PG_USER_PASSWORD}
         volumes:
             - postgres12:/var/lib/postgresql/data
         restart: on-failure
@@ -20,8 +24,16 @@ services:
                 MDM_UI_THEME_NAME: "default"
                 CACHE_BURST: "${CACHE_BURST}"
         environment:
-            PGPASSWORD: postgresisawesome
             runtime.config.path: /usr/local/tomcat/conf/runtime.yml
+            PGPASSWORD: ${POSTGRES_PASSWORD}
+            MDM_PG_HOST: ${MDM_PG_HOST}
+            MDM_PG_PORT: ${MDM_PG_PORT}
+            MDM_PG_USER_NAME: ${MDM_PG_USER_NAME}
+            MDM_PG_USER_PASSWORD: ${MDM_PG_USER_PASSWORD}
+            MDM_EMAIL_USERNAME: ${MDM_EMAIL_USERNAME}
+            MDM_EMAIL_PASSWORD: ${MDM_EMAIL_PASSWORD}
+            MDM_EMAIL_HOST: ${MDM_EMAIL_HOST}
+            MDM_EMAIL_PORT: ${MDM_EMAIL_PORT}
         ports:
             - "${MDM_PORT}:8080"
         depends_on:

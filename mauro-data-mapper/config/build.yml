@@ -2,12 +2,12 @@
 # Database connection details
 ---
 database:
-    host: postgres
-    port: 5432
+    host: ${MDM_PG_HOST}
+    port: ${MDM_PG_PORT}
     name: maurodatamapper
 dataSource:
-    username: maurodatamapperuser
-    password: jF80LQyP4BbH
+    username: ${MDM_PG_USER_NAME}
+    password: ${MDM_PG_USER_PASSWORD}
 ---
 # MDM configuration properties
 ---
@@ -20,10 +20,10 @@ maurodatamapper:
 ---
 simplejavamail:
     smtp:
-        username: ''
-        password: ''
-        host: ''
-        port: ''
+        username: ${MDM_EMAIL_USERNAME}
+        password: ${MDM_EMAIL_PASSWORD}
+        host: ${MDM_EMAIL_HOST}
+        port: ${MDM_EMAIL_PORT}
     transportstrategy: SMTP_TLS
 ---
 # mdm-plugin-email-proxy Configuration
