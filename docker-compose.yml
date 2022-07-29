@@ -25,7 +25,7 @@ services:
                 CACHE_BURST: "${CACHE_BURST}"
         environment:
             runtime.config.path: /usr/local/tomcat/conf/runtime.yml
-            PGPASSWORD: ${POSTGRES_PASSWORD}
+            PGPASSWORD: ${DB_PASSWORD}
             MDM_DB_HOST: ${MDM_DB_HOST}
             MDM_DB_PORT: ${MDM_DB_PORT}
             MDM_DB_USER_NAME: ${MDM_DB_USER_NAME}
