@@ -13,8 +13,8 @@ dataSource:
 ---
 maurodatamapper:
     authority:
-        name: 'Mauro Data Mapper'
-        url: http://localhost
+        name: ${MDM_AUTHORITY_NAME} 
+        url: ${MDM_AUTHORITY_URL} 
 ---
 # Standard Email configuration
 ---
@@ -39,7 +39,8 @@ grails:
     cors:
         enabled: true
         # The following are the defaults
-        # allowedOrigins: [] # Cannot use allowedOrigins with *, they have to be clearly stated origins
+        # Cannot use allowedOrigins with *, they have to be clearly stated origins
+        allowedOrigins: ['${MDM_GRAILS_CORS_ALLOWEDORIGINS}'] 
         allowedOriginPatterns: [ '*' ]
         allowedMethods: [ 'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD' ]
         allowedHeaders: [ 'origin', 'content-type', 'accept', 'authorization', 'pragma', 'cache-control' ]

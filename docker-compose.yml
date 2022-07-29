@@ -34,6 +34,9 @@ services:
             MDM_EMAIL_PASSWORD: ${MDM_EMAIL_PASSWORD}
             MDM_EMAIL_HOST: ${MDM_EMAIL_HOST}
             MDM_EMAIL_PORT: ${MDM_EMAIL_PORT}
+            MDM_GRAILS_CORS_ALLOWEDORIGINS: ${MDM_GRAILS_CORS_ALLOWEDORIGINS}
+            MDM_AUTHORITY_NAME: ${MDM_AUTHORITY_NAME}
+            MDM_AUTHORITY_URL: ${MDM_AUTHORITY_URL}
         ports:
             - "${MDM_PORT}:8080"
         depends_on:
