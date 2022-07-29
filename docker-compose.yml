@@ -6,8 +6,8 @@ services:
         shm_size: 512mb
         environment:
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            MDM_PG_HOST: ${MDM_PG_HOST}
-            MDM_PG_PORT: ${MDM_PG_PORT}
+            DATABASE_HOST: ${MDM_PG_HOST}
+            DATABASE_PORT: ${MDM_PG_PORT}
             MDM_PG_USER_NAME: ${MDM_PG_USER_NAME}
             MDM_PG_USER_PASSWORD: ${MDM_PG_USER_PASSWORD}
         volumes:
