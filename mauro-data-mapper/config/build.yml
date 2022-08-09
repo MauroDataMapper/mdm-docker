@@ -2,28 +2,28 @@
 # Database connection details
 ---
 database:
-    host: postgres
-    port: 5432
+    host: ${DATABASE_HOST}
+    port: ${DATABASE_PORT}
     name: maurodatamapper
 dataSource:
-    username: maurodatamapperuser
-    password: jF80LQyP4BbH
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 ---
 # MDM configuration properties
 ---
 maurodatamapper:
     authority:
-        name: 'Mauro Data Mapper'
-        url: http://localhost
+        name: ${MDM_AUTHORITY_NAME} 
+        url: ${MDM_AUTHORITY_URL} 
 ---
 # Standard Email configuration
 ---
 simplejavamail:
     smtp:
-        username: ''
-        password: ''
-        host: ''
-        port: ''
+        username: ${MDM_EMAIL_USERNAME}
+        password: ${MDM_EMAIL_PASSWORD}
+        host: ${MDM_EMAIL_HOST}
+        port: ${MDM_EMAIL_PORT}
     transportstrategy: SMTP_TLS
 ---
 # mdm-plugin-email-proxy Configuration
@@ -39,7 +39,8 @@ grails:
     cors:
         enabled: true
         # The following are the defaults
-        # allowedOrigins: [] # Cannot use allowedOrigins with *, they have to be clearly stated origins
+        # Cannot use allowedOrigins with *, they have to be clearly stated origins
+        allowedOrigins: ['${MDM_GRAILS_CORS_ALLOWEDORIGINS}'] 
         allowedOriginPatterns: [ '*' ]
         allowedMethods: [ 'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD' ]
         allowedHeaders: [ 'origin', 'content-type', 'accept', 'authorization', 'pragma', 'cache-control' ]
