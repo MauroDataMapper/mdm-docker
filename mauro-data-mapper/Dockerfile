@@ -1,9 +1,9 @@
 
-ARG MDM_BASE_IMAGE_VERSION=grails-5.1.7-jdk17.0.3_7-node-14.18.1-npm-8.3.0
-ARG TOMCAT_IMAGE_VERSION=9.0.62-jre17-temurin
+ARG MDM_BASE_IMAGE_VERSION=grails-5.1.9-jdk17.0.3_7-node-14.18.1-npm-8.3.0.R2
+ARG TOMCAT_IMAGE_VERSION=9.0.65-jre17-temurin
 
 FROM maurodatamapper/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
-LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
+LABEL org.opencontainers.image.authors="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>, Joe Crawford <joseph.crawford@bdi.ox.ac.uk>"
 
 ARG MDM_APPLICATION_COMMIT=main
 ARG MDM_UI_COMMIT=main
@@ -59,7 +59,7 @@ RUN cp -r $MDM_UI_BUILD_HOME/* .
 RUN ls
 
 FROM maurodatamapper/tomcat:$TOMCAT_IMAGE_VERSION
-LABEL maintainer="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>"
+LABEL org.opencontainers.image.authors="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>, Joe Crawford <joseph.crawford@bdi.ox.ac.uk>"
 
 ARG MDM_BUILD_HOME=/opt/mdm
 ARG MDM_EXPLORER_BUILD_HOME=/opt/mdm-explorer/dist
