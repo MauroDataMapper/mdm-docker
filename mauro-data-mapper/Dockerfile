@@ -1,6 +1,6 @@
 
 ARG MDM_BASE_IMAGE_VERSION=grails-5.1.9-jdk17.0.3_7-node-14.18.1-npm-8.3.0.R2
-ARG TOMCAT_IMAGE_VERSION=9.0.65-jre17-temurin
+ARG TOMCAT_IMAGE_VERSION=9.0.71-jre17-temurin
 
 FROM maurodatamapper/mdm_base:$MDM_BASE_IMAGE_VERSION AS mdm-build
 LABEL org.opencontainers.image.authors="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>, Joe Crawford <joseph.crawford@bdi.ox.ac.uk>"
