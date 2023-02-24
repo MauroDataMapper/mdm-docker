@@ -1,7 +1,7 @@
 version: '3.8'
 services:
     postgres:
-        image: "maurodatamapper/postgres:12.0-alpine"
+        image: "maurodatamapper/postgres:12.14-alpine"
         build: ./postgres
         shm_size: 512mb
         environment:
