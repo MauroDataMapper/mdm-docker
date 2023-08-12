@@ -1,4 +1,4 @@
-FROM postgres:12.14-alpine
+FROM postgres:15.4-alpine
 COPY fixtures /docker-entrypoint-initdb.d
 
 ENV POSTGRES_PASSWORD=postgresisawesome \
