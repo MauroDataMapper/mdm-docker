@@ -10,7 +10,7 @@ precompiledBuild(){
      MDM_EXPLORER_LIBRARY='artifacts'
    fi
 
-  MDM_EXPLORER_URL="https://jenkins.cs.ox.ac.uk/artifactory/${MDM_EXPLORER_LIBRARY}/mauroDataMapper/mdm-explorer/mdm-explorer-${MDM_EXPLORER_VERSION}.tgz"
+  MDM_EXPLORER_URL="https://mauro-repository.com/${MDM_EXPLORER_LIBRARY}/mauroDataMapper/mdm-explorer/mdm-explorer-${MDM_EXPLORER_VERSION}.tgz"
 
   echo "Downloading precompiled sources ${MDM_EXPLORER_URL}"
 
